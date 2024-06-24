@@ -27,9 +27,6 @@ export { BooleanOperations };
 export { Relations };
 export { SmartIntersections };
 
-Flatten.BooleanOperations = BooleanOperations;
-Flatten.Relations = Relations;
-
 export {
   CCW,
   CW,
@@ -40,5 +37,3 @@ export {
   OVERLAP_SAME,
   OVERLAP_OPPOSITE,
 } from "./src/utils/constants";
-
-// export default graph2d;
