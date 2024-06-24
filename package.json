@@ -1,5 +1,5 @@
 {
-  "name": "@flatten-js/core",
+  "name": "Graph2D",
   "version": "1.5.4",
   "description": "Javascript library for 2d geometry",
   "main": "dist/main.cjs",
@@ -28,10 +28,6 @@
     "coverage": "nyc report --reporter=text-lcov | coveralls",
     "build": "rollup -c  --bundleConfigAsCjs"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/alexbol99/flatten-js.git"
-  },
   "keywords": [
     "geometry",
     "2d",
@@ -48,12 +44,7 @@
     "polygon clipping",
     "dimensionally extended 9-intersections model"
   ],
-  "author": "Alex Bol <alexbol99@gmail.com> (https://github.com/alexbol99)",
   "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/alexbol99/flatten-js/issues"
-  },
-  "homepage": "https://github.com/alexbol99/flatten-js#readme",
   "engines": {
     "node": ">=4.2.4"
   },
