@@ -1,6 +1,6 @@
 {
   "name": "@zenghawtin/graph2d",
-  "version": "1.1.11",
+  "version": "1.1.12",
   "description": "Javascript library for 2d geometry",
   "main": "dist/main.cjs",
   "umd:main": "dist/main.umd.js",
@@ -26,7 +26,8 @@
     "create-patch": "npm version patch && git push --tags origin master",
     "publish-npm": "npm publish --access public",
     "coverage": "nyc report --reporter=text-lcov | coveralls",
-    "build": "rollup -c  --bundleConfigAsCjs"
+    "build": "rollup -c  --bundleConfigAsCjs",
+    "bcp": "npm run build && npm run create-patch && npm run publish-npm "
   },
   "keywords": [
     "geometry",
