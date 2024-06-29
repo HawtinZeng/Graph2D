@@ -561,6 +561,11 @@ declare namespace Flatten {
         toJSON() : Object;
         toArray() : Polygon[];
         svg(attrs?: SVGAttributes): string;
+        /**
+         * get the outer normalized normal vector
+         * @param ver vertext index
+         */
+        computeNormal(ver: number): Vector;
     }
 
     type MultilineEdgeShape = Segment | Arc | Ray | Line;
