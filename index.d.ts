@@ -563,7 +563,7 @@ declare namespace Flatten {
         svg(attrs?: SVGAttributes): string;
         /**
          * get the outer normalized normal vector
-         * @param ver vertext index
+         * @param ver vertex index
          */
         computeNormal(ver: number): Vector;
     }
