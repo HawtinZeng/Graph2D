@@ -3,6 +3,8 @@ import * as BooleanOperations from "./src/algorithms/boolean_op";
 import * as Relations from "./src/algorithms/relation";
 import * as SmartIntersections from "./src/data_structures/smart_intersections";
 
+import Flatten from "./src/flatten";
+
 export { Utils };
 export { Errors } from "./src/utils/errors";
 export { Matrix, matrix } from "./src/classes/matrix";
@@ -27,6 +29,9 @@ export { BooleanOperations };
 export { Relations };
 export { SmartIntersections };
 
+Flatten.BooleanOperations = BooleanOperations;
+Flatten.Relations = Relations;
+
 export {
   CCW,
   CW,
@@ -37,3 +42,5 @@ export {
   OVERLAP_SAME,
   OVERLAP_OPPOSITE,
 } from "./src/utils/constants";
+
+export default Flatten;

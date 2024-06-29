@@ -109,6 +109,15 @@ declare namespace Flatten {
     class Shape {
         translate(vec: Vector): Shape;
         translate(x:number, y:number): Shape;
+        /**
+         * Returns new shape rotated by given angle around given center point.
+         * If center point is omitted, rotates around zero point (0,0).
+         * Positive value of angle defines rotation in counterclockwise direction,
+         * negative angle defines rotation in clockwise direction
+         * @param {number} angle - angle in radians
+         * @param {Point} [center=(0,0)] center
+         * @returns {Shape}
+         */
         rotate(angle: number, center?: Point): Shape;
         scale(scaleX: number, scaleY: number) : Shape;
         transform(matrix: Matrix): Shape;

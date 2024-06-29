@@ -154,7 +154,7 @@
         START_VERTEX: START_VERTEX$1
     });
 
-    let Flatten$1 = {
+    let Flatten = {
       Utils: Utils$1,
       Errors: undefined,
       Matrix: undefined,
@@ -177,10 +177,10 @@
     };
 
     for (let c in Constants) {
-      Flatten$1[c] = Constants[c];
+      Flatten[c] = Constants[c];
     }
 
-    Object.defineProperty(Flatten$1, "DP_TOL", {
+    Object.defineProperty(Flatten, "DP_TOL", {
       get: function () {
         return getTolerance();
       },
@@ -244,7 +244,7 @@
         }
     }
 
-    Flatten$1.Errors = Errors;
+    Flatten.Errors = Errors;
 
     /**
      * Class implements bidirectional non-circular linked list. <br/>
@@ -465,14 +465,14 @@
                     // there may be only one line
                     // only first and last may be rays
                     shapes.every((shape) => {
-                        return shape instanceof Flatten$1.Segment ||
-                            shape instanceof Flatten$1.Arc ||
-                            shape instanceof Flatten$1.Ray ||
-                            shape instanceof Flatten$1.Line
+                        return shape instanceof Flatten.Segment ||
+                            shape instanceof Flatten.Arc ||
+                            shape instanceof Flatten.Ray ||
+                            shape instanceof Flatten.Line
                     });
 
                     for (let shape of shapes) {
-                        let edge = new Flatten$1.Edge(shape);
+                        let edge = new Flatten.Edge(shape);
                         this.append(edge);
                     }
 
@@ -494,7 +494,7 @@
          * @returns {Box}
          */
         get box() {
-            return this.edges.reduce( (acc,edge) => acc.merge(edge.box), new Flatten$1.Box() );
+            return this.edges.reduce( (acc,edge) => acc.merge(edge.box), new Flatten.Box() );
         }
 
         /**
@@ -549,7 +549,7 @@
             if (shapes[1] === null)   // point incident to edge end vertex, return edge itself
                return edge;
 
-            let newEdge = new Flatten$1.Edge(shapes[0]);
+            let newEdge = new Flatten.Edge(shapes[0]);
             let edgeBefore = edge.prev;
 
             /* Insert first split edge into linked list after edgeBefore */
@@ -615,7 +615,7 @@
          * @param {Point} center - rotation center, default is (0,0)
          * @returns {Multiline} - new rotated polygon
          */
-        rotate(angle = 0, center = new Flatten$1.Point()) {
+        rotate(angle = 0, center = new Flatten.Point()) {
             return new Multiline(this.edges.map( edge => edge.shape.rotate(angle, center) ));
         }
 
@@ -625,7 +625,7 @@
          * @param {Matrix} matrix - affine transformation matrix
          * @returns {Multiline} - new multiline
          */
-        transform(matrix = new Flatten$1.Matrix()) {
+        transform(matrix = new Flatten.Matrix()) {
             return new Multiline(this.edges.map( edge => edge.shape.transform(matrix)));
         }
 
@@ -663,14 +663,14 @@
         }
     }
 
-    Flatten$1.Multiline = Multiline;
+    Flatten.Multiline = Multiline;
 
     /**
      * Shortcut function to create multiline
      * @param args
      */
-    const multiline = (...args) => new Flatten$1.Multiline(...args);
-    Flatten$1.multiline = multiline;
+    const multiline = (...args) => new Flatten.Multiline(...args);
+    Flatten.multiline = multiline;
 
     /*
         Smart intersections describe intersection points that refers to the edges they intersect
@@ -1416,7 +1416,7 @@
                 while (edge_tmp != edge_to1) {
                     if (edge_tmp.bvStart === edge_from1.bv && edge_tmp.bvEnd === edge_to1.bv) {
                         let [dist, segment] = edge_tmp.shape.distanceTo(poly2);
-                        if (dist < 10*Flatten$1.DP_TOL) {  // it should be very close
+                        if (dist < 10*Flatten.DP_TOL) {  // it should be very close
                             // let pt = edge_tmp.end;
                             // add to the list of intersections of poly1
                             addToIntPoints(edge_tmp, segment.ps, int_points1);
@@ -1971,7 +1971,7 @@
         let detX = C1 * B2 - B1 * C2;
         let detY = A1 * C2 - C1 * A2;
 
-        if (!Flatten$1.Utils.EQ_0(det)) {
+        if (!Flatten.Utils.EQ_0(det)) {
             let x, y;
 
             if (B1 === 0) {        // vertical line x  = C1/A1, where A1 == +1 or -1
@@ -1995,7 +1995,7 @@
                 y = detY / det;
             }
 
-            ip.push(new Flatten$1.Point(x, y));
+            ip.push(new Flatten.Point(x, y));
         }
 
         return ip;
@@ -2006,9 +2006,9 @@
         let prj = circle.pc.projectionOn(line);            // projection of circle center on a line
         let dist = circle.pc.distanceTo(prj)[0];           // distance from circle center to projection
 
-        if (Flatten$1.Utils.EQ(dist, circle.r)) {            // line tangent to circle - return single intersection point
+        if (Flatten.Utils.EQ(dist, circle.r)) {            // line tangent to circle - return single intersection point
             ip.push(prj);
-        } else if (Flatten$1.Utils.LT(dist, circle.r)) {       // return two intersection points
+        } else if (Flatten.Utils.LT(dist, circle.r)) {       // return two intersection points
             let delta = Math.sqrt(circle.r * circle.r - dist * dist);
             let v_trans, pt;
 
@@ -2043,7 +2043,7 @@
             return ip;
         }
 
-        let circle = new Flatten$1.Circle(arc.pc, arc.r);
+        let circle = new Flatten.Circle(arc.pc, arc.r);
         let ip_tmp = intersectLine2Circle(line, circle);
         for (let pt of ip_tmp) {
             if (pt.on(arc)) {
@@ -2083,7 +2083,7 @@
         }
 
         // Calculate intersection between lines
-        let line1 = new Flatten$1.Line(seg.ps, seg.pe);
+        let line1 = new Flatten.Line(seg.ps, seg.pe);
         return intersectLine2Line(line1, line);
     }
 
@@ -2112,8 +2112,8 @@
         }
 
         // Neither seg1 nor seg2 is zero length
-        let line1 = new Flatten$1.Line(seg1.ps, seg1.pe);
-        let line2 = new Flatten$1.Line(seg2.ps, seg2.pe);
+        let line1 = new Flatten.Line(seg1.ps, seg1.pe);
+        let line2 = new Flatten.Line(seg2.ps, seg2.pe);
 
         // Check overlapping between segments in case of incidence
         // If segments touching, add one point. If overlapping, add two points
@@ -2144,8 +2144,8 @@
 
     function isPointInSegmentBox(point, segment) {
         const box = segment.box;
-        return Flatten$1.Utils.LE(point.x, box.xmax) && Flatten$1.Utils.GE(point.x, box.xmin) &&
-            Flatten$1.Utils.LE(point.y, box.ymax) && Flatten$1.Utils.GE(point.y, box.ymin)
+        return Flatten.Utils.LE(point.x, box.xmax) && Flatten.Utils.GE(point.x, box.xmin) &&
+            Flatten.Utils.LE(point.y, box.ymax) && Flatten.Utils.GE(point.y, box.ymin)
     }
 
     function intersectSegment2Circle(segment, circle) {
@@ -2158,14 +2158,14 @@
         // Special case of zero length segment
         if (segment.isZeroLength()) {
             let [dist, _] = segment.ps.distanceTo(circle.pc);
-            if (Flatten$1.Utils.EQ(dist, circle.r)) {
+            if (Flatten.Utils.EQ(dist, circle.r)) {
                 ips.push(segment.ps);
             }
             return ips;
         }
 
         // Non zero-length segment
-        let line = new Flatten$1.Line(segment.ps, segment.pe);
+        let line = new Flatten.Line(segment.ps, segment.pe);
 
         let ips_tmp = intersectLine2Circle(line, circle);
 
@@ -2194,8 +2194,8 @@
         }
 
         // Non-zero length segment
-        let line = new Flatten$1.Line(segment.ps, segment.pe);
-        let circle = new Flatten$1.Circle(arc.pc, arc.r);
+        let line = new Flatten.Line(segment.ps, segment.pe);
+        let circle = new Flatten.Circle(arc.pc, arc.r);
 
         let ip_tmp = intersectLine2Circle(line, circle);
 
@@ -2226,27 +2226,27 @@
             return ip;
         }
 
-        let vec = new Flatten$1.Vector(circle1.pc, circle2.pc);
+        let vec = new Flatten.Vector(circle1.pc, circle2.pc);
 
         let r1 = circle1.r;
         let r2 = circle2.r;
 
         // Degenerated circle
-        if (Flatten$1.Utils.EQ_0(r1) || Flatten$1.Utils.EQ_0(r2))
+        if (Flatten.Utils.EQ_0(r1) || Flatten.Utils.EQ_0(r2))
             return ip;
 
         // In case of equal circles return one leftmost point
-        if (Flatten$1.Utils.EQ_0(vec.x) && Flatten$1.Utils.EQ_0(vec.y) && Flatten$1.Utils.EQ(r1, r2)) {
+        if (Flatten.Utils.EQ_0(vec.x) && Flatten.Utils.EQ_0(vec.y) && Flatten.Utils.EQ(r1, r2)) {
             ip.push(circle1.pc.translate(-r1, 0));
             return ip;
         }
 
         let dist = circle1.pc.distanceTo(circle2.pc)[0];
 
-        if (Flatten$1.Utils.GT(dist, r1 + r2))               // circles too far, no intersections
+        if (Flatten.Utils.GT(dist, r1 + r2))               // circles too far, no intersections
             return ip;
 
-        if (Flatten$1.Utils.LT(dist, Math.abs(r1 - r2)))     // one circle is contained within another, no intersections
+        if (Flatten.Utils.LT(dist, Math.abs(r1 - r2)))     // one circle is contained within another, no intersections
             return ip;
 
         // Normalize vector.
@@ -2257,7 +2257,7 @@
 
         // Case of touching from outside or from inside - single intersection point
         // TODO: check this specifically not sure if correct
-        if (Flatten$1.Utils.EQ(dist, r1 + r2) || Flatten$1.Utils.EQ(dist, Math.abs(r1 - r2))) {
+        if (Flatten.Utils.EQ(dist, r1 + r2) || Flatten.Utils.EQ(dist, Math.abs(r1 - r2))) {
             pt = circle1.pc.translate(r1 * vec.x, r1 * vec.y);
             ip.push(pt);
             return ip;
@@ -2305,7 +2305,7 @@
 
         // Special case: overlapping arcs
         // May return up to 4 intersection points
-        if (arc1.pc.equalTo(arc2.pc) && Flatten$1.Utils.EQ(arc1.r, arc2.r)) {
+        if (arc1.pc.equalTo(arc2.pc) && Flatten.Utils.EQ(arc1.r, arc2.r)) {
             let pt;
 
             pt = arc1.start;
@@ -2326,8 +2326,8 @@
         }
 
         // Common case
-        let circle1 = new Flatten$1.Circle(arc1.pc, arc1.r);
-        let circle2 = new Flatten$1.Circle(arc2.pc, arc2.r);
+        let circle1 = new Flatten.Circle(arc1.pc, arc1.r);
+        let circle2 = new Flatten.Circle(arc2.pc, arc2.r);
         let ip_tmp = circle1.intersect(circle2);
         for (let pt of ip_tmp) {
             if (pt.on(arc1) && pt.on(arc2)) {
@@ -2346,7 +2346,7 @@
 
         // Case when arc center incident to circle center
         // Return arc's end points as 2 intersection points
-        if (circle.pc.equalTo(arc.pc) && Flatten$1.Utils.EQ(circle.r, arc.r)) {
+        if (circle.pc.equalTo(arc.pc) && Flatten.Utils.EQ(circle.r, arc.r)) {
             ip.push(arc.start);
             ip.push(arc.end);
             return ip;
@@ -2354,7 +2354,7 @@
 
         // Common case
         let circle1 = circle;
-        let circle2 = new Flatten$1.Circle(arc.pc, arc.r);
+        let circle2 = new Flatten.Circle(arc.pc, arc.r);
         let ip_tmp = intersectCircle2Circle(circle1, circle2);
         for (let pt of ip_tmp) {
             if (pt.on(arc)) {
@@ -2504,13 +2504,13 @@
     }
 
     function intersectShape2Polygon(shape, polygon) {
-        if (shape instanceof Flatten$1.Line) {
+        if (shape instanceof Flatten.Line) {
             return intersectLine2Polygon(shape, polygon);
         }
-        else if (shape instanceof Flatten$1.Segment) {
+        else if (shape instanceof Flatten.Segment) {
             return intersectSegment2Polygon(shape, polygon);
         }
-        else if (shape instanceof Flatten$1.Arc) {
+        else if (shape instanceof Flatten.Arc) {
             return intersectArc2Polygon(shape, polygon);
         }
         else {
@@ -2523,7 +2523,7 @@
     }
 
     function createLineFromRay(ray) {
-        return new Flatten$1.Line(ray.start, ray.norm)
+        return new Flatten.Line(ray.start, ray.norm)
     }
     function intersectRay2Segment(ray, segment) {
         return intersectSegment2Line(segment, createLineFromRay(ray))
@@ -2578,29 +2578,29 @@
         //     return Flatten.OUTSIDE;
         // }
 
-        let ray = new Flatten$1.Ray(point);
-        let line = new Flatten$1.Line(ray.pt, ray.norm);
+        let ray = new Flatten.Ray(point);
+        let line = new Flatten.Line(ray.pt, ray.norm);
 
         // 2. Locate relevant edges of the polygon
-        const searchBox = new Flatten$1.Box(
-            ray.box.xmin-Flatten$1.DP_TOL, ray.box.ymin-Flatten$1.DP_TOL,
-            ray.box.xmax, ray.box.ymax+Flatten$1.DP_TOL
+        const searchBox = new Flatten.Box(
+            ray.box.xmin-Flatten.DP_TOL, ray.box.ymin-Flatten.DP_TOL,
+            ray.box.xmax, ray.box.ymax+Flatten.DP_TOL
         );
 
         if (polygon.box.not_intersect(searchBox)) {
-            return Flatten$1.OUTSIDE;
+            return Flatten.OUTSIDE;
         }
 
         let resp_edges = polygon.edges.search(searchBox);
 
         if (resp_edges.length === 0) {
-            return Flatten$1.OUTSIDE;
+            return Flatten.OUTSIDE;
         }
 
         // 2.5 Check if boundary
         for (let edge of resp_edges) {
             if (edge.shape.contains(point)) {
-                return Flatten$1.BOUNDARY;
+                return Flatten.BOUNDARY;
             }
         }
 
@@ -2613,7 +2613,7 @@
 
                 // If intersection is equal to query point then point lays on boundary
                 if (ip.equalTo(point)) {
-                    return Flatten$1.BOUNDARY;
+                    return Flatten.BOUNDARY;
                 }
 
                 intersections.push({
@@ -2702,7 +2702,7 @@
                     counter++;
                 }
             } else {        /* intersection point is not a vertex */
-                if (intersection.edge.shape instanceof Flatten$1.Segment) {
+                if (intersection.edge.shape instanceof Flatten.Segment) {
                     counter++;
                 } else {
                     /* Check if ray does not touch the curve in the extremal (top or bottom) point */
@@ -2819,37 +2819,37 @@
      * @returns {DE9IM}
      */
     function relate(shape1, shape2) {
-        if (shape1 instanceof Flatten$1.Line && shape2 instanceof Flatten$1.Line) {
+        if (shape1 instanceof Flatten.Line && shape2 instanceof Flatten.Line) {
             return relateLine2Line(shape1,  shape2);
         }
-        else if (shape1 instanceof Flatten$1.Line && shape2 instanceof Flatten$1.Circle) {
+        else if (shape1 instanceof Flatten.Line && shape2 instanceof Flatten.Circle) {
             return relateLine2Circle(shape1, shape2);
         }
-        else if (shape1 instanceof Flatten$1.Line && shape2 instanceof Flatten$1.Box) {
+        else if (shape1 instanceof Flatten.Line && shape2 instanceof Flatten.Box) {
             return relateLine2Box(shape1, shape2);
         }
-        else if ( shape1 instanceof Flatten$1.Line  && shape2 instanceof Flatten$1.Polygon) {
+        else if ( shape1 instanceof Flatten.Line  && shape2 instanceof Flatten.Polygon) {
             return relateLine2Polygon(shape1, shape2);
         }
-        else if ( (shape1 instanceof Flatten$1.Segment || shape1 instanceof Flatten$1.Arc)  && shape2 instanceof Flatten$1.Polygon) {
+        else if ( (shape1 instanceof Flatten.Segment || shape1 instanceof Flatten.Arc)  && shape2 instanceof Flatten.Polygon) {
             return relateShape2Polygon(shape1, shape2);
         }
-        else if ( (shape1 instanceof Flatten$1.Segment || shape1 instanceof Flatten$1.Arc)  &&
-            (shape2 instanceof Flatten$1.Circle || shape2 instanceof Flatten$1.Box) ) {
-            return relateShape2Polygon(shape1, new Flatten$1.Polygon(shape2));
+        else if ( (shape1 instanceof Flatten.Segment || shape1 instanceof Flatten.Arc)  &&
+            (shape2 instanceof Flatten.Circle || shape2 instanceof Flatten.Box) ) {
+            return relateShape2Polygon(shape1, new Flatten.Polygon(shape2));
         }
-        else if (shape1 instanceof Flatten$1.Polygon && shape2 instanceof Flatten$1.Polygon) {
+        else if (shape1 instanceof Flatten.Polygon && shape2 instanceof Flatten.Polygon) {
             return relatePolygon2Polygon(shape1, shape2);
         }
-        else if ((shape1 instanceof Flatten$1.Circle || shape1 instanceof Flatten$1.Box) &&
-            (shape2 instanceof  Flatten$1.Circle || shape2 instanceof Flatten$1.Box)) {
-            return relatePolygon2Polygon(new Flatten$1.Polygon(shape1), new Flatten$1.Polygon(shape2));
+        else if ((shape1 instanceof Flatten.Circle || shape1 instanceof Flatten.Box) &&
+            (shape2 instanceof  Flatten.Circle || shape2 instanceof Flatten.Box)) {
+            return relatePolygon2Polygon(new Flatten.Polygon(shape1), new Flatten.Polygon(shape2));
         }
-        else if ((shape1 instanceof Flatten$1.Circle || shape1 instanceof Flatten$1.Box) && shape2 instanceof Flatten$1.Polygon) {
-            return relatePolygon2Polygon(new Flatten$1.Polygon(shape1), shape2);
+        else if ((shape1 instanceof Flatten.Circle || shape1 instanceof Flatten.Box) && shape2 instanceof Flatten.Polygon) {
+            return relatePolygon2Polygon(new Flatten.Polygon(shape1), shape2);
         }
-        else if (shape1 instanceof Flatten$1.Polygon && (shape2 instanceof Flatten$1.Circle || shape2 instanceof Flatten$1.Box)) {
-            return relatePolygon2Polygon(shape1, new Flatten$1.Polygon(shape2));
+        else if (shape1 instanceof Flatten.Polygon && (shape2 instanceof Flatten.Circle || shape2 instanceof Flatten.Box)) {
+            return relatePolygon2Polygon(shape1, new Flatten.Polygon(shape2));
         }
     }
 
@@ -2902,7 +2902,7 @@
             denim.I2B = ip_sorted;
             denim.I2E = [splitShapes[0], splitShapes[2]];
 
-            denim.E2I = new Flatten$1.Polygon([circle.toArc()]).cutWithLine(line);
+            denim.E2I = new Flatten.Polygon([circle.toArc()]).cutWithLine(line);
         }
 
         return denim;
@@ -2944,7 +2944,7 @@
                 denim.I2B = ip_sorted;
                 denim.I2E = [splitShapes[0], splitShapes[2]];
 
-                denim.E2I = new Flatten$1.Polygon(box.toSegments()).cutWithLine(line);
+                denim.E2I = new Flatten.Polygon(box.toSegments()).cutWithLine(line);
             }
         }
         return denim;
@@ -2960,9 +2960,9 @@
 
         [...multiline].forEach(edge => edge.setInclusion(polygon));
 
-        denim.I2I = [...multiline].filter(edge => edge.bv === Flatten$1.INSIDE).map(edge => edge.shape);
-        denim.I2B = [...multiline].slice(1).map( (edge) => edge.bv === Flatten$1.BOUNDARY ? edge.shape : edge.shape.start );
-        denim.I2E = [...multiline].filter(edge => edge.bv === Flatten$1.OUTSIDE).map(edge => edge.shape);
+        denim.I2I = [...multiline].filter(edge => edge.bv === Flatten.INSIDE).map(edge => edge.shape);
+        denim.I2B = [...multiline].slice(1).map( (edge) => edge.bv === Flatten.BOUNDARY ? edge.shape : edge.shape.start );
+        denim.I2E = [...multiline].filter(edge => edge.bv === Flatten.OUTSIDE).map(edge => edge.shape);
 
         denim.E2I = polygon.cutWithLine(line);
 
@@ -2979,9 +2979,9 @@
 
         [...multiline].forEach(edge => edge.setInclusion(polygon));
 
-        denim.I2I = [...multiline].filter(edge => edge.bv === Flatten$1.INSIDE).map(edge => edge.shape);
-        denim.I2B = [...multiline].slice(1).map( (edge) => edge.bv === Flatten$1.BOUNDARY ? edge.shape : edge.shape.start );
-        denim.I2E = [...multiline].filter(edge => edge.bv === Flatten$1.OUTSIDE).map(edge => edge.shape);
+        denim.I2I = [...multiline].filter(edge => edge.bv === Flatten.INSIDE).map(edge => edge.shape);
+        denim.I2B = [...multiline].slice(1).map( (edge) => edge.bv === Flatten.BOUNDARY ? edge.shape : edge.shape.start );
+        denim.I2E = [...multiline].filter(edge => edge.bv === Flatten.OUTSIDE).map(edge => edge.shape);
 
 
         denim.B2I = [];
@@ -2989,13 +2989,13 @@
         denim.B2E = [];
         for (let pt of [shape.start, shape.end]) {
             switch (ray_shoot(polygon, pt)) {
-                case Flatten$1.INSIDE:
+                case Flatten.INSIDE:
                     denim.B2I.push(pt);
                     break;
-                case Flatten$1.BOUNDARY:
+                case Flatten.BOUNDARY:
                     denim.B2B.push(pt);
                     break;
-                case Flatten$1.OUTSIDE:
+                case Flatten.OUTSIDE:
                     denim.B2E.push(pt);
                     break;
             }
@@ -3177,23 +3177,23 @@
        * @returns {boolean} true if equal, false otherwise
        */
       equalTo(matrix) {
-        if (!Flatten$1.Utils.EQ(this.tx, matrix.tx)) return false;
-        if (!Flatten$1.Utils.EQ(this.ty, matrix.ty)) return false;
-        if (!Flatten$1.Utils.EQ(this.a, matrix.a)) return false;
-        if (!Flatten$1.Utils.EQ(this.b, matrix.b)) return false;
-        if (!Flatten$1.Utils.EQ(this.c, matrix.c)) return false;
-        if (!Flatten$1.Utils.EQ(this.d, matrix.d)) return false;
+        if (!Flatten.Utils.EQ(this.tx, matrix.tx)) return false;
+        if (!Flatten.Utils.EQ(this.ty, matrix.ty)) return false;
+        if (!Flatten.Utils.EQ(this.a, matrix.a)) return false;
+        if (!Flatten.Utils.EQ(this.b, matrix.b)) return false;
+        if (!Flatten.Utils.EQ(this.c, matrix.c)) return false;
+        if (!Flatten.Utils.EQ(this.d, matrix.d)) return false;
         return true;
       }
     }
 
-    Flatten$1.Matrix = Matrix;
+    Flatten.Matrix = Matrix;
     /**
      * Function to create matrix equivalent to "new" constructor
      * @param args
      */
-    const matrix = (...args) => new Flatten$1.Matrix(...args);
-    Flatten$1.matrix = matrix;
+    const matrix = (...args) => new Flatten.Matrix(...args);
+    Flatten.matrix = matrix;
 
     class Matrix3 {
       constructor(n11, n12, n13, n21, n22, n23, n31, n32, n33) {
@@ -4446,7 +4446,7 @@
          * @returns {AnyShape[]}
          */
         hit(point) {
-            let box = new Flatten$1.Box(point.x - 1, point.y - 1, point.x + 1, point.y + 1);
+            let box = new Flatten.Box(point.x - 1, point.y - 1, point.x + 1, point.y + 1);
             let resp = this.index.search(box);
             return resp.filter((shape) => point.on(shape));
         }
@@ -4461,7 +4461,7 @@
         }
     }
 
-    Flatten$1.PlanarSet = PlanarSet;
+    Flatten.PlanarSet = PlanarSet;
 
     /**
      * Base class representing shape
@@ -4500,7 +4500,7 @@
          * @param {Point} [center=(0,0)] center
          * @returns {Shape}
          */
-        rotate(angle, center = new Flatten$1.Point()) {
+        rotate(angle, center = new Flatten.Point()) {
             return this.transform(new Matrix().rotate(angle, center.x, center.y));
         }
 
@@ -4596,7 +4596,7 @@
          * @returns {Box}
          */
         get box() {
-            return new Flatten$1.Box(this.x, this.y, this.x, this.y);
+            return new Flatten.Box(this.x, this.y, this.x, this.y);
         }
 
         /**
@@ -4604,7 +4604,7 @@
          * @returns {Point}
          */
         clone() {
-            return new Flatten$1.Point(this.x, this.y);
+            return new Flatten.Point(this.x, this.y);
         }
 
         get vertices() {
@@ -4617,7 +4617,7 @@
          * @returns {boolean}
          */
         equalTo(pt) {
-            return Flatten$1.Utils.EQ(this.x, pt.x) && Flatten$1.Utils.EQ(this.y, pt.y);
+            return Flatten.Utils.EQ(this.x, pt.x) && Flatten.Utils.EQ(this.y, pt.y);
         }
 
         /**
@@ -4628,9 +4628,9 @@
          * @returns {boolean}
          */
         lessThan(pt) {
-            if (Flatten$1.Utils.LT(this.y, pt.y))
+            if (Flatten.Utils.LT(this.y, pt.y))
                 return true;
-            if (Flatten$1.Utils.EQ(this.y, pt.y) && Flatten$1.Utils.LT(this.x, pt.x))
+            if (Flatten.Utils.EQ(this.y, pt.y) && Flatten.Utils.LT(this.x, pt.x))
                 return true;
             return false;
         }
@@ -4641,7 +4641,7 @@
          * @returns {Point}
          */
         transform(m) {
-            return new Flatten$1.Point(m.transform([this.x, this.y]))
+            return new Flatten.Point(m.transform([this.x, this.y]))
         }
 
         /**
@@ -4653,8 +4653,8 @@
             if (this.equalTo(line.pt))                   // this point equal to line anchor point
                 return this.clone();
 
-            let vec = new Flatten$1.Vector(this, line.pt);
-            if (Flatten$1.Utils.EQ_0(vec.cross(line.norm)))    // vector to point from anchor point collinear to normal vector
+            let vec = new Flatten.Vector(this, line.pt);
+            if (Flatten.Utils.EQ_0(vec.cross(line.norm)))    // vector to point from anchor point collinear to normal vector
                 return line.pt.clone();
 
             let dist = vec.dot(line.norm);             // signed distance
@@ -4669,8 +4669,8 @@
          * @returns {boolean}
          */
         leftTo(line) {
-            let vec = new Flatten$1.Vector(line.pt, this);
-            let onLeftSemiPlane = Flatten$1.Utils.GT(vec.dot(line.norm), 0);
+            let vec = new Flatten.Vector(line.pt, this);
+            let onLeftSemiPlane = Flatten.Utils.GT(vec.dot(line.norm), 0);
             return onLeftSemiPlane;
         }
 
@@ -4684,31 +4684,31 @@
             if (shape instanceof Point) {
                 let dx = shape.x - this.x;
                 let dy = shape.y - this.y;
-                return [Math.sqrt(dx * dx + dy * dy), new Flatten$1.Segment(this, shape)];
+                return [Math.sqrt(dx * dx + dy * dy), new Flatten.Segment(this, shape)];
             }
 
-            if (shape instanceof Flatten$1.Line) {
-                return Flatten$1.Distance.point2line(this, shape);
+            if (shape instanceof Flatten.Line) {
+                return Flatten.Distance.point2line(this, shape);
             }
 
-            if (shape instanceof Flatten$1.Circle) {
-                return Flatten$1.Distance.point2circle(this, shape);
+            if (shape instanceof Flatten.Circle) {
+                return Flatten.Distance.point2circle(this, shape);
             }
 
-            if (shape instanceof Flatten$1.Segment) {
-                return Flatten$1.Distance.point2segment(this, shape);
+            if (shape instanceof Flatten.Segment) {
+                return Flatten.Distance.point2segment(this, shape);
             }
 
-            if (shape instanceof Flatten$1.Arc) {
-                return Flatten$1.Distance.point2arc(this, shape);
+            if (shape instanceof Flatten.Arc) {
+                return Flatten.Distance.point2arc(this, shape);
             }
 
-            if (shape instanceof Flatten$1.Polygon) {
-                return Flatten$1.Distance.point2polygon(this, shape);
+            if (shape instanceof Flatten.Polygon) {
+                return Flatten.Distance.point2polygon(this, shape);
             }
 
-            if (shape instanceof Flatten$1.PlanarSet) {
-                return Flatten$1.Distance.shape2planarSet(this, shape);
+            if (shape instanceof Flatten.PlanarSet) {
+                return Flatten.Distance.shape2planarSet(this, shape);
             }
         }
 
@@ -4718,35 +4718,35 @@
          * @returns {boolean}
          */
         on(shape) {
-            if (shape instanceof Flatten$1.Point) {
+            if (shape instanceof Flatten.Point) {
                 return this.equalTo(shape);
             }
 
-            if (shape instanceof Flatten$1.Box) {
+            if (shape instanceof Flatten.Box) {
                 return shape.contains(this);
             }
 
-            if (shape instanceof Flatten$1.Line) {
+            if (shape instanceof Flatten.Line) {
                 return shape.contains(this);
             }
 
-            if (shape instanceof Flatten$1.Ray) {
+            if (shape instanceof Flatten.Ray) {
                 return shape.contains(this)
             }
 
-            if (shape instanceof Flatten$1.Circle) {
+            if (shape instanceof Flatten.Circle) {
                 return shape.contains(this);
             }
 
-            if (shape instanceof Flatten$1.Segment) {
+            if (shape instanceof Flatten.Segment) {
                 return shape.contains(this);
             }
 
-            if (shape instanceof Flatten$1.Arc) {
+            if (shape instanceof Flatten.Arc) {
                 return shape.contains(this);
             }
 
-            if (shape instanceof Flatten$1.Polygon) {
+            if (shape instanceof Flatten.Polygon) {
                 return shape.contains(this);
             }
         }
@@ -4775,13 +4775,13 @@
         }
     };
 
-    Flatten$1.Point = Point$1;
+    Flatten.Point = Point$1;
     /**
      * Function to create point equivalent to "new" constructor
      * @param args
      */
-    const point = (...args) => new Flatten$1.Point(...args);
-    Flatten$1.point = point;
+    const point = (...args) => new Flatten.Point(...args);
+    Flatten.point = point;
 
     // export {Point};
 
@@ -4845,7 +4845,7 @@
                     return;
                 }
 
-                if (a1 instanceof Flatten$1.Point && a2 instanceof Flatten$1.Point) {
+                if (a1 instanceof Flatten.Point && a2 instanceof Flatten.Point) {
                     this.x = a2.x - a1.x;
                     this.y = a2.y - a1.y;
                     return;
@@ -4861,7 +4861,7 @@
          * @returns {Vector}
          */
         clone() {
-            return new Flatten$1.Vector(this.x, this.y);
+            return new Flatten.Vector(this.x, this.y);
         }
 
         /**
@@ -4889,7 +4889,7 @@
          * @returns {boolean}
          */
         equalTo(v) {
-            return Flatten$1.Utils.EQ(this.x, v.x) && Flatten$1.Utils.EQ(this.y, v.y);
+            return Flatten.Utils.EQ(this.x, v.x) && Flatten.Utils.EQ(this.y, v.y);
         }
 
         /**
@@ -4898,7 +4898,7 @@
          * @returns {Vector}
          */
         multiply(scalar) {
-            return (new Flatten$1.Vector(scalar * this.x, scalar * this.y));
+            return (new Flatten.Vector(scalar * this.x, scalar * this.y));
         }
 
         /**
@@ -4927,8 +4927,8 @@
          * @returns {Vector}
          */
         normalize() {
-            if (!Flatten$1.Utils.EQ_0(this.length)) {
-                return (new Flatten$1.Vector(this.x / this.length, this.y / this.length));
+            if (!Flatten.Utils.EQ_0(this.length)) {
+                return (new Flatten.Vector(this.x / this.length, this.y / this.length));
             }
             throw Errors.ZERO_DIVISION;
         }
@@ -4941,7 +4941,7 @@
          * @param {number} angle - Angle in radians
          * @returns {Vector}
          */
-        rotate(angle, center = new Flatten$1.Point()) {
+        rotate(angle, center = new Flatten.Point()) {
             if (center.x === 0 && center.y === 0) {
                 return this.transform(new Matrix().rotate(angle));
             }
@@ -4954,7 +4954,7 @@
          * @returns {Vector}
          */
         transform(m) {
-            return new Flatten$1.Vector(m.transform([this.x, this.y]))
+            return new Flatten.Vector(m.transform([this.x, this.y]))
         }
 
         /**
@@ -4962,7 +4962,7 @@
          * @returns {Vector}
          */
         rotate90CCW() {
-            return new Flatten$1.Vector(-this.y, this.x);
+            return new Flatten.Vector(-this.y, this.x);
         };
 
         /**
@@ -4970,7 +4970,7 @@
          * @returns {Vector}
          */
         rotate90CW() {
-            return new Flatten$1.Vector(this.y, -this.x);
+            return new Flatten.Vector(this.y, -this.x);
         };
 
         /**
@@ -4978,7 +4978,7 @@
          * @returns {Vector}
          */
         invert() {
-            return new Flatten$1.Vector(-this.x, -this.y);
+            return new Flatten.Vector(-this.x, -this.y);
         }
 
         /**
@@ -4987,7 +4987,7 @@
          * @returns {Vector}
          */
         add(v) {
-            return new Flatten$1.Vector(this.x + v.x, this.y + v.y);
+            return new Flatten.Vector(this.x + v.x, this.y + v.y);
         }
 
         /**
@@ -4996,7 +4996,7 @@
          * @returns {Vector}
          */
         subtract(v) {
-            return new Flatten$1.Vector(this.x - v.x, this.y - v.y);
+            return new Flatten.Vector(this.x - v.x, this.y - v.y);
         }
 
         /**
@@ -5030,14 +5030,14 @@
         }
     };
 
-    Flatten$1.Vector = Vector$1;
+    Flatten.Vector = Vector$1;
 
     /**
      * Function to create vector equivalent to "new" constructor
      * @param args
      */
-    const vector$1 = (...args) => new Flatten$1.Vector(...args);
-    Flatten$1.vector = vector$1;
+    const vector$1 = (...args) => new Flatten.Vector(...args);
+    Flatten.vector = vector$1;
 
     /**
      * Created by Alex Bol on 3/10/2017.
@@ -5060,12 +5060,12 @@
              * Start point
              * @type {Point}
              */
-            this.ps = new Flatten$1.Point();
+            this.ps = new Flatten.Point();
             /**
              * End Point
              * @type {Point}
              */
-            this.pe = new Flatten$1.Point();
+            this.pe = new Flatten.Point();
 
             if (args.length === 0) {
                 return;
@@ -5073,33 +5073,33 @@
 
             if (args.length === 1 && args[0] instanceof Array && args[0].length === 4) {
                 let coords = args[0];
-                this.ps = new Flatten$1.Point(coords[0], coords[1]);
-                this.pe = new Flatten$1.Point(coords[2], coords[3]);
+                this.ps = new Flatten.Point(coords[0], coords[1]);
+                this.pe = new Flatten.Point(coords[2], coords[3]);
                 return;
             }
 
             if (args.length === 1 && args[0] instanceof Object && args[0].name === "segment") {
                 let {ps, pe} = args[0];
-                this.ps = new Flatten$1.Point(ps.x, ps.y);
-                this.pe = new Flatten$1.Point(pe.x, pe.y);
+                this.ps = new Flatten.Point(ps.x, ps.y);
+                this.pe = new Flatten.Point(pe.x, pe.y);
                 return;
             }
 
             // second point omitted issue #84
-            if (args.length === 1 && args[0] instanceof Flatten$1.Point) {
+            if (args.length === 1 && args[0] instanceof Flatten.Point) {
                 this.ps = args[0].clone();
                 return;
             }
 
-            if (args.length === 2 && args[0] instanceof Flatten$1.Point && args[1] instanceof Flatten$1.Point) {
+            if (args.length === 2 && args[0] instanceof Flatten.Point && args[1] instanceof Flatten.Point) {
                 this.ps = args[0].clone();
                 this.pe = args[1].clone();
                 return;
             }
 
             if (args.length === 4) {
-                this.ps = new Flatten$1.Point(args[0], args[1]);
-                this.pe = new Flatten$1.Point(args[2], args[3]);
+                this.ps = new Flatten.Point(args[0], args[1]);
+                this.pe = new Flatten.Point(args[2], args[3]);
                 return;
             }
 
@@ -5111,7 +5111,7 @@
          * @returns {Segment}
          */
         clone() {
-            return new Flatten$1.Segment(this.start, this.end);
+            return new Flatten.Segment(this.start, this.end);
         }
 
         /**
@@ -5152,7 +5152,7 @@
          * @returns {number}
          */
         get slope() {
-            let vec = new Flatten$1.Vector(this.start, this.end);
+            let vec = new Flatten.Vector(this.start, this.end);
             return vec.slope;
         }
 
@@ -5161,7 +5161,7 @@
          * @returns {Box}
          */
         get box() {
-            return new Flatten$1.Box(
+            return new Flatten.Box(
                 Math.min(this.start.x, this.end.x),
                 Math.min(this.start.y, this.end.y),
                 Math.max(this.start.x, this.end.x),
@@ -5184,7 +5184,7 @@
          * @returns {boolean}
          */
         contains(pt) {
-            return Flatten$1.Utils.EQ_0(this.distanceToPoint(pt));
+            return Flatten.Utils.EQ_0(this.distanceToPoint(pt));
         }
 
         /**
@@ -5193,35 +5193,35 @@
          * @returns {Point[]}
          */
         intersect(shape) {
-            if (shape instanceof Flatten$1.Point) {
+            if (shape instanceof Flatten.Point) {
                 return this.contains(shape) ? [shape] : [];
             }
 
-            if (shape instanceof Flatten$1.Line) {
+            if (shape instanceof Flatten.Line) {
                 return intersectSegment2Line(this, shape);
             }
 
-            if (shape instanceof Flatten$1.Ray) {
+            if (shape instanceof Flatten.Ray) {
                 return intersectRay2Segment(shape, this);
             }
 
-            if (shape instanceof Flatten$1.Segment) {
+            if (shape instanceof Flatten.Segment) {
                 return  intersectSegment2Segment(this, shape);
             }
 
-            if (shape instanceof Flatten$1.Circle) {
+            if (shape instanceof Flatten.Circle) {
                 return intersectSegment2Circle(this, shape);
             }
 
-            if (shape instanceof Flatten$1.Box) {
+            if (shape instanceof Flatten.Box) {
                 return intersectSegment2Box(this, shape);
             }
 
-            if (shape instanceof Flatten$1.Arc) {
+            if (shape instanceof Flatten.Arc) {
                 return intersectSegment2Arc(this, shape);
             }
 
-            if (shape instanceof Flatten$1.Polygon) {
+            if (shape instanceof Flatten.Polygon) {
                 return  intersectSegment2Polygon(this, shape);
             }
         }
@@ -5233,39 +5233,39 @@
          * @returns {Segment} shortest segment between segment and shape (started at segment, ended at shape)
          */
         distanceTo(shape) {
-            if (shape instanceof Flatten$1.Point) {
-                let [dist, shortest_segment] = Flatten$1.Distance.point2segment(shape, this);
+            if (shape instanceof Flatten.Point) {
+                let [dist, shortest_segment] = Flatten.Distance.point2segment(shape, this);
                 shortest_segment = shortest_segment.reverse();
                 return [dist, shortest_segment];
             }
 
-            if (shape instanceof Flatten$1.Circle) {
-                let [dist, shortest_segment] = Flatten$1.Distance.segment2circle(this, shape);
+            if (shape instanceof Flatten.Circle) {
+                let [dist, shortest_segment] = Flatten.Distance.segment2circle(this, shape);
                 return [dist, shortest_segment];
             }
 
-            if (shape instanceof Flatten$1.Line) {
-                let [dist, shortest_segment] = Flatten$1.Distance.segment2line(this, shape);
+            if (shape instanceof Flatten.Line) {
+                let [dist, shortest_segment] = Flatten.Distance.segment2line(this, shape);
                 return [dist, shortest_segment];
             }
 
-            if (shape instanceof Flatten$1.Segment) {
-                let [dist, shortest_segment] = Flatten$1.Distance.segment2segment(this, shape);
+            if (shape instanceof Flatten.Segment) {
+                let [dist, shortest_segment] = Flatten.Distance.segment2segment(this, shape);
                 return [dist, shortest_segment];
             }
 
-            if (shape instanceof Flatten$1.Arc) {
-                let [dist, shortest_segment] = Flatten$1.Distance.segment2arc(this, shape);
+            if (shape instanceof Flatten.Arc) {
+                let [dist, shortest_segment] = Flatten.Distance.segment2arc(this, shape);
                 return [dist, shortest_segment];
             }
 
-            if (shape instanceof Flatten$1.Polygon) {
-                let [dist, shortest_segment] = Flatten$1.Distance.shape2polygon(this, shape);
+            if (shape instanceof Flatten.Polygon) {
+                let [dist, shortest_segment] = Flatten.Distance.shape2polygon(this, shape);
                 return [dist, shortest_segment];
             }
 
-            if (shape instanceof Flatten$1.PlanarSet) {
-                let [dist, shortest_segment] = Flatten$1.Distance.shape2planarSet(this, shape);
+            if (shape instanceof Flatten.PlanarSet) {
+                let [dist, shortest_segment] = Flatten.Distance.shape2planarSet(this, shape);
                 return [dist, shortest_segment];
             }
         }
@@ -5275,7 +5275,7 @@
          * @returns {Vector}
          */
         tangentInStart() {
-            let vec = new Flatten$1.Vector(this.start, this.end);
+            let vec = new Flatten.Vector(this.start, this.end);
             return vec.normalize();
         }
 
@@ -5284,7 +5284,7 @@
          * @returns {Vector}
          */
         tangentInEnd() {
-            let vec = new Flatten$1.Vector(this.end, this.start);
+            let vec = new Flatten.Vector(this.end, this.start);
             return vec.normalize();
         }
 
@@ -5311,8 +5311,8 @@
                 return [this.clone(), null];
 
             return [
-                new Flatten$1.Segment(this.start, pt),
-                new Flatten$1.Segment(pt, this.end)
+                new Flatten.Segment(this.start, pt),
+                new Flatten.Segment(pt, this.end)
             ]
         }
 
@@ -5321,7 +5321,7 @@
          * @returns {Point}
          */
         middle() {
-            return new Flatten$1.Point((this.start.x + this.end.x) / 2, (this.start.y + this.end.y) / 2);
+            return new Flatten.Point((this.start.x + this.end.x) / 2, (this.start.y + this.end.y) / 2);
         }
 
         /**
@@ -5334,14 +5334,14 @@
             if (length == 0) return this.start;
             if (length == this.length) return this.end;
             let factor = length / this.length;
-            return new Flatten$1.Point(
+            return new Flatten.Point(
                 (this.end.x - this.start.x) * factor + this.start.x,
                 (this.end.y - this.start.y) * factor + this.start.y
             );
         }
 
         distanceToPoint(pt) {
-            let [dist, ...rest] = Flatten$1.Distance.point2segment(pt, this);
+            let [dist, ...rest] = Flatten.Distance.point2segment(pt, this);
             return dist;
         };
 
@@ -5357,7 +5357,7 @@
          * @param {Matrix} matrix - affine transformation matrix
          * @returns {Segment} - transformed segment
          */
-        transform(matrix = new Flatten$1.Matrix()) {
+        transform(matrix = new Flatten.Matrix()) {
             return new Segment(this.ps.transform(matrix), this.pe.transform(matrix))
         }
 
@@ -5375,7 +5375,7 @@
          * @returns {Point[]} new array sorted
          */
         sortPoints(pts) {
-            let line = new Flatten$1.Line(this.start, this.end);
+            let line = new Flatten.Line(this.start, this.end);
             return line.sortPoints(pts);
         }
 
@@ -5395,18 +5395,18 @@
         }
     }
 
-    Flatten$1.Segment = Segment;
+    Flatten.Segment = Segment;
     /**
      * Shortcut method to create new segment
      */
-    const segment = (...args) => new Flatten$1.Segment(...args);
-    Flatten$1.segment = segment;
+    const segment = (...args) => new Flatten.Segment(...args);
+    Flatten.segment = segment;
 
     /**
      * Created by Alex Bol on 2/20/2017.
      */
 
-    let {vector} = Flatten$1;
+    let {vector} = Flatten;
 
     /**
      * Class representing a line
@@ -5424,14 +5424,14 @@
              * Point a line passes through
              * @type {Point}
              */
-            this.pt = new Flatten$1.Point();
+            this.pt = new Flatten.Point();
             /**
              * Normal vector to a line <br/>
              * Vector is normalized (length == 1)<br/>
              * Direction of the vector is chosen to satisfy inequality norm * p >= 0
              * @type {Vector}
              */
-            this.norm = new Flatten$1.Vector(0, 1);
+            this.norm = new Flatten.Vector(0, 1);
 
             if (args.length === 0) {
                 return;
@@ -5439,8 +5439,8 @@
 
             if (args.length === 1 && args[0] instanceof Object && args[0].name === "line") {
                 let {pt, norm} = args[0];
-                this.pt = new Flatten$1.Point(pt);
-                this.norm = new Flatten$1.Vector(norm);
+                this.pt = new Flatten.Point(pt);
+                this.norm = new Flatten.Vector(norm);
                 return;
             }
 
@@ -5448,7 +5448,7 @@
                 let a1 = args[0];
                 let a2 = args[1];
 
-                if (a1 instanceof Flatten$1.Point && a2 instanceof Flatten$1.Point) {
+                if (a1 instanceof Flatten.Point && a2 instanceof Flatten.Point) {
                     this.pt = a1;
                     this.norm = Line.points2norm(a1, a2);
                     if (this.norm.dot(vector(this.pt.x,this.pt.y)) >= 0) {
@@ -5457,8 +5457,8 @@
                     return;
                 }
 
-                if (a1 instanceof Flatten$1.Point && a2 instanceof Flatten$1.Vector) {
-                    if (Flatten$1.Utils.EQ_0(a2.x) && Flatten$1.Utils.EQ_0(a2.y)) {
+                if (a1 instanceof Flatten.Point && a2 instanceof Flatten.Vector) {
+                    if (Flatten.Utils.EQ_0(a2.x) && Flatten.Utils.EQ_0(a2.y)) {
                         throw Errors.ILLEGAL_PARAMETERS;
                     }
                     this.pt = a1.clone();
@@ -5470,8 +5470,8 @@
                     return;
                 }
 
-                if (a1 instanceof Flatten$1.Vector && a2 instanceof Flatten$1.Point) {
-                    if (Flatten$1.Utils.EQ_0(a1.x) && Flatten$1.Utils.EQ_0(a1.y)) {
+                if (a1 instanceof Flatten.Vector && a2 instanceof Flatten.Point) {
+                    if (Flatten.Utils.EQ_0(a1.x) && Flatten.Utils.EQ_0(a1.y)) {
                         throw Errors.ILLEGAL_PARAMETERS;
                     }
                     this.pt = a2.clone();
@@ -5492,7 +5492,7 @@
          * @returns {Line}
          */
         clone() {
-            return new Flatten$1.Line(this.pt, this.norm);
+            return new Flatten.Line(this.pt, this.norm);
         }
 
         /* The following methods need for implementation of Edge interface
@@ -5518,7 +5518,7 @@
          * @returns {Box}
          */
         get box() {
-            return new Flatten$1.Box(
+            return new Flatten.Box(
                 Number.NEGATIVE_INFINITY,
                 Number.NEGATIVE_INFINITY,
                 Number.POSITIVE_INFINITY,
@@ -5537,7 +5537,7 @@
          * @returns {number} - slope of the line
          */
         get slope() {
-            let vec = new Flatten$1.Vector(this.norm.y, -this.norm.x);
+            let vec = new Flatten.Vector(this.norm.y, -this.norm.x);
             return vec.slope;
         }
 
@@ -5560,7 +5560,7 @@
          * @returns {boolean}
          */
         parallelTo(other_line) {
-            return Flatten$1.Utils.EQ_0(this.norm.cross(other_line.norm));
+            return Flatten.Utils.EQ_0(this.norm.cross(other_line.norm));
         }
 
         /**
@@ -5582,8 +5582,8 @@
                 return true;
             }
             /* Line contains point if vector to point is orthogonal to the line normal vector */
-            let vec = new Flatten$1.Vector(this.pt, pt);
-            return Flatten$1.Utils.EQ_0(this.norm.dot(vec));
+            let vec = new Flatten.Vector(this.pt, pt);
+            return Flatten.Utils.EQ_0(this.norm.dot(vec));
         }
 
         /**
@@ -5604,35 +5604,35 @@
          * @returns {Point[]}
          */
         intersect(shape) {
-            if (shape instanceof Flatten$1.Point) {
+            if (shape instanceof Flatten.Point) {
                 return this.contains(shape) ? [shape] : [];
             }
 
-            if (shape instanceof Flatten$1.Line) {
+            if (shape instanceof Flatten.Line) {
                 return intersectLine2Line(this, shape);
             }
 
-            if (shape instanceof Flatten$1.Ray) {
+            if (shape instanceof Flatten.Ray) {
                 return intersectRay2Line(shape, this);
             }
 
-            if (shape instanceof Flatten$1.Circle) {
+            if (shape instanceof Flatten.Circle) {
                 return intersectLine2Circle(this, shape);
             }
 
-            if (shape instanceof Flatten$1.Box) {
+            if (shape instanceof Flatten.Box) {
                 return intersectLine2Box(this, shape);
             }
 
-            if (shape instanceof Flatten$1.Segment) {
+            if (shape instanceof Flatten.Segment) {
                 return intersectSegment2Line(shape, this);
             }
 
-            if (shape instanceof Flatten$1.Arc) {
+            if (shape instanceof Flatten.Arc) {
                 return intersectLine2Arc(this, shape);
             }
 
-            if (shape instanceof Flatten$1.Polygon) {
+            if (shape instanceof Flatten.Polygon) {
                 return  intersectLine2Polygon(this, shape);
             }
 
@@ -5644,30 +5644,30 @@
          * @returns {[number, Segment]}
          */
         distanceTo(shape) {
-            if (shape instanceof Flatten$1.Point) {
-                let [distance, shortest_segment] = Flatten$1.Distance.point2line(shape, this);
+            if (shape instanceof Flatten.Point) {
+                let [distance, shortest_segment] = Flatten.Distance.point2line(shape, this);
                 shortest_segment = shortest_segment.reverse();
                 return [distance, shortest_segment];
             }
 
-            if (shape instanceof Flatten$1.Circle) {
-                let [distance, shortest_segment] = Flatten$1.Distance.circle2line(shape, this);
+            if (shape instanceof Flatten.Circle) {
+                let [distance, shortest_segment] = Flatten.Distance.circle2line(shape, this);
                 shortest_segment = shortest_segment.reverse();
                 return [distance, shortest_segment];
             }
 
-            if (shape instanceof Flatten$1.Segment) {
-                let [distance, shortest_segment] = Flatten$1.Distance.segment2line(shape, this);
+            if (shape instanceof Flatten.Segment) {
+                let [distance, shortest_segment] = Flatten.Distance.segment2line(shape, this);
                 return [distance, shortest_segment.reverse()];
             }
 
-            if (shape instanceof Flatten$1.Arc) {
-                let [distance, shortest_segment] = Flatten$1.Distance.arc2line(shape, this);
+            if (shape instanceof Flatten.Arc) {
+                let [distance, shortest_segment] = Flatten.Distance.arc2line(shape, this);
                 return [distance, shortest_segment.reverse()];
             }
 
-            if (shape instanceof Flatten$1.Polygon) {
-                let [distance, shortest_segment] = Flatten$1.Distance.shape2polygon(this, shape);
+            if (shape instanceof Flatten.Polygon) {
+                let [distance, shortest_segment] = Flatten.Distance.shape2polygon(this, shape);
                 return [distance, shortest_segment];
             }
         }
@@ -5679,11 +5679,11 @@
          * @returns {MultilineShapes}
          */
         split(pt) {
-            if (pt instanceof Flatten$1.Point) {
-                return [new Flatten$1.Ray(pt, this.norm), new Flatten$1.Ray(pt, this.norm)]
+            if (pt instanceof Flatten.Point) {
+                return [new Flatten.Ray(pt, this.norm), new Flatten.Ray(pt, this.norm)]
             }
             else {
-                let multiline = new Flatten$1.Multiline([this]);
+                let multiline = new Flatten.Multiline([this]);
                 let sorted_points = this.sortPoints(pt);
                 multiline.split(sorted_points);
                 return multiline.toShapes();
@@ -5695,8 +5695,8 @@
          * @param {number} angle - angle in radians
          * @param {Point} center - center of rotation
          */
-        rotate(angle, center = new Flatten$1.Point()) {
-            return new Flatten$1.Line(
+        rotate(angle, center = new Flatten.Point()) {
+            return new Flatten.Line(
                 this.pt.rotate(angle, center),
                 this.norm.rotate(angle)
             )
@@ -5708,7 +5708,7 @@
          * @returns {Line}
          */
         transform(m) {
-            return new Flatten$1.Line(
+            return new Flatten.Line(
                 this.pt.transform(m),
                 this.norm.clone()
             )
@@ -5748,7 +5748,7 @@
             let ps = ip[0];
             let pe = ip.length === 2 ? ip[1] : ip.find(pt => !pt.equalTo(ps));
             if (pe === undefined) pe = ps;
-            let segment = new Flatten$1.Segment(ps, pe);
+            let segment = new Flatten.Segment(ps, pe);
             return segment.svg(attrs);
         }
 
@@ -5756,19 +5756,19 @@
             if (pt1.equalTo(pt2)) {
                 throw Errors.ILLEGAL_PARAMETERS;
             }
-            let vec = new Flatten$1.Vector(pt1, pt2);
+            let vec = new Flatten.Vector(pt1, pt2);
             let unit = vec.normalize();
             return unit.rotate90CCW();
         }
     };
 
-    Flatten$1.Line = Line$1;
+    Flatten.Line = Line$1;
     /**
      * Function to create line equivalent to "new" constructor
      * @param args
      */
-    const line = (...args) => new Flatten$1.Line(...args);
-    Flatten$1.line = line;
+    const line = (...args) => new Flatten.Line(...args);
+    Flatten.line = line;
 
     /**
      * Created by Alex Bol on 3/6/2017.
@@ -5796,7 +5796,7 @@
              * Circle center
              * @type {Point}
              */
-            this.pc = new Flatten$1.Point();
+            this.pc = new Flatten.Point();
             /**
              * Circle radius
              * @type {number}
@@ -5805,11 +5805,11 @@
 
             if (args.length === 1 && args[0] instanceof Object && args[0].name === "circle") {
                 let {pc, r} = args[0];
-                this.pc = new Flatten$1.Point(pc);
+                this.pc = new Flatten.Point(pc);
                 this.r = r;
             } else {
                 let [pc, r] = [...args];
-                if (pc && pc instanceof Flatten$1.Point) this.pc = pc.clone();
+                if (pc && pc instanceof Flatten.Point) this.pc = pc.clone();
                 if (r !== undefined) this.r = r;
             }
             // throw Errors.ILLEGAL_PARAMETERS;    unreachable code
@@ -5820,7 +5820,7 @@
          * @returns {Circle}
          */
         clone() {
-            return new Flatten$1.Circle(this.pc.clone(), this.r);
+            return new Flatten.Circle(this.pc.clone(), this.r);
         }
 
         /**
@@ -5836,7 +5836,7 @@
          * @returns {Box}
          */
         get box() {
-            return new Flatten$1.Box(
+            return new Flatten.Box(
                 this.pc.x - this.r,
                 this.pc.y - this.r,
                 this.pc.x + this.r,
@@ -5850,25 +5850,25 @@
          * @returns {boolean}
          */
         contains(shape) {
-            if (shape instanceof Flatten$1.Point) {
-                return Flatten$1.Utils.LE(shape.distanceTo(this.center)[0], this.r);
+            if (shape instanceof Flatten.Point) {
+                return Flatten.Utils.LE(shape.distanceTo(this.center)[0], this.r);
             }
 
-            if (shape instanceof Flatten$1.Segment) {
-                return Flatten$1.Utils.LE(shape.start.distanceTo(this.center)[0], this.r) &&
-                    Flatten$1.Utils.LE(shape.end.distanceTo(this.center)[0], this.r);
+            if (shape instanceof Flatten.Segment) {
+                return Flatten.Utils.LE(shape.start.distanceTo(this.center)[0], this.r) &&
+                    Flatten.Utils.LE(shape.end.distanceTo(this.center)[0], this.r);
             }
 
-            if (shape instanceof Flatten$1.Arc) {
+            if (shape instanceof Flatten.Arc) {
                 return this.intersect(shape).length === 0 &&
-                    Flatten$1.Utils.LE(shape.start.distanceTo(this.center)[0], this.r) &&
-                    Flatten$1.Utils.LE(shape.end.distanceTo(this.center)[0], this.r);
+                    Flatten.Utils.LE(shape.start.distanceTo(this.center)[0], this.r) &&
+                    Flatten.Utils.LE(shape.end.distanceTo(this.center)[0], this.r);
             }
 
-            if (shape instanceof Flatten$1.Circle) {
+            if (shape instanceof Flatten.Circle) {
                 return this.intersect(shape).length === 0 &&
-                    Flatten$1.Utils.LE(shape.r, this.r) &&
-                    Flatten$1.Utils.LE(shape.center.distanceTo(this.center)[0], this.r);
+                    Flatten.Utils.LE(shape.r, this.r) &&
+                    Flatten.Utils.LE(shape.center.distanceTo(this.center)[0], this.r);
             }
 
             /* TODO: box, polygon */
@@ -5880,7 +5880,7 @@
          * @returns {Arc}
          */
         toArc(counterclockwise = true) {
-            return new Flatten$1.Arc(this.center, this.r, Math.PI, -Math.PI, counterclockwise);
+            return new Flatten.Arc(this.center, this.r, Math.PI, -Math.PI, counterclockwise);
         }
 
         /**
@@ -5894,7 +5894,7 @@
                 throw Errors.OPERATION_IS_NOT_SUPPORTED
             if (!(this.pc.x === 0.0 && this.pc.y === 0.0))
                 throw Errors.OPERATION_IS_NOT_SUPPORTED
-            return new Flatten$1.Circle(this.pc, this.r*sx)
+            return new Flatten.Circle(this.pc, this.r*sx)
         }
 
         /**
@@ -5902,8 +5902,8 @@
          * @param {Matrix} matrix - affine transformation matrix
          * @returns {Circle}
          */
-        transform(matrix = new Flatten$1.Matrix()) {
-            return new Flatten$1.Circle(this.pc.transform(matrix), this.r)
+        transform(matrix = new Flatten.Matrix()) {
+            return new Flatten.Circle(this.pc.transform(matrix), this.r)
         }
 
         /**
@@ -5912,31 +5912,31 @@
          * @returns {Point[]}
          */
         intersect(shape) {
-            if (shape instanceof Flatten$1.Point) {
+            if (shape instanceof Flatten.Point) {
                 return this.contains(shape) ? [shape] : [];
             }
-            if (shape instanceof Flatten$1.Line) {
+            if (shape instanceof Flatten.Line) {
                 return intersectLine2Circle(shape, this);
             }
-            if (shape instanceof Flatten$1.Ray) {
+            if (shape instanceof Flatten.Ray) {
                 return intersectRay2Circle(shape, this);
             }
-            if (shape instanceof Flatten$1.Segment) {
+            if (shape instanceof Flatten.Segment) {
                 return intersectSegment2Circle(shape, this);
             }
 
-            if (shape instanceof Flatten$1.Circle) {
+            if (shape instanceof Flatten.Circle) {
                 return intersectCircle2Circle(shape, this);
             }
 
-            if (shape instanceof Flatten$1.Box) {
+            if (shape instanceof Flatten.Box) {
                 return intersectCircle2Box(this, shape);
             }
 
-            if (shape instanceof Flatten$1.Arc) {
+            if (shape instanceof Flatten.Arc) {
                 return intersectArc2Circle(shape, this);
             }
-            if (shape instanceof Flatten$1.Polygon) {
+            if (shape instanceof Flatten.Polygon) {
                 return intersectCircle2Polygon(this, shape);
             }
         }
@@ -5949,41 +5949,41 @@
 
          */
         distanceTo(shape) {
-            if (shape instanceof Flatten$1.Point) {
-                let [distance, shortest_segment] = Flatten$1.Distance.point2circle(shape, this);
+            if (shape instanceof Flatten.Point) {
+                let [distance, shortest_segment] = Flatten.Distance.point2circle(shape, this);
                 shortest_segment = shortest_segment.reverse();
                 return [distance, shortest_segment];
             }
 
-            if (shape instanceof Flatten$1.Circle) {
-                let [distance, shortest_segment] = Flatten$1.Distance.circle2circle(this, shape);
+            if (shape instanceof Flatten.Circle) {
+                let [distance, shortest_segment] = Flatten.Distance.circle2circle(this, shape);
                 return [distance, shortest_segment];
             }
 
-            if (shape instanceof Flatten$1.Line) {
-                let [distance, shortest_segment] = Flatten$1.Distance.circle2line(this, shape);
+            if (shape instanceof Flatten.Line) {
+                let [distance, shortest_segment] = Flatten.Distance.circle2line(this, shape);
                 return [distance, shortest_segment];
             }
 
-            if (shape instanceof Flatten$1.Segment) {
-                let [distance, shortest_segment] = Flatten$1.Distance.segment2circle(shape, this);
+            if (shape instanceof Flatten.Segment) {
+                let [distance, shortest_segment] = Flatten.Distance.segment2circle(shape, this);
                 shortest_segment = shortest_segment.reverse();
                 return [distance, shortest_segment];
             }
 
-            if (shape instanceof Flatten$1.Arc) {
-                let [distance, shortest_segment] = Flatten$1.Distance.arc2circle(shape, this);
+            if (shape instanceof Flatten.Arc) {
+                let [distance, shortest_segment] = Flatten.Distance.arc2circle(shape, this);
                 shortest_segment = shortest_segment.reverse();
                 return [distance, shortest_segment];
             }
 
-            if (shape instanceof Flatten$1.Polygon) {
-                let [distance, shortest_segment] = Flatten$1.Distance.shape2polygon(this, shape);
+            if (shape instanceof Flatten.Polygon) {
+                let [distance, shortest_segment] = Flatten.Distance.shape2polygon(this, shape);
                 return [distance, shortest_segment];
             }
 
-            if (shape instanceof Flatten$1.PlanarSet) {
-                let [dist, shortest_segment] = Flatten$1.Distance.shape2planarSet(this, shape);
+            if (shape instanceof Flatten.PlanarSet) {
+                let [dist, shortest_segment] = Flatten.Distance.shape2planarSet(this, shape);
                 return [dist, shortest_segment];
             }
         }
@@ -6004,13 +6004,13 @@
 
     };
 
-    Flatten$1.Circle = Circle$1;
+    Flatten.Circle = Circle$1;
     /**
      * Shortcut to create new circle
      * @param args
      */
-    const circle = (...args) => new Flatten$1.Circle(...args);
-    Flatten$1.circle = circle;
+    const circle = (...args) => new Flatten.Circle(...args);
+    Flatten.circle = circle;
 
     /**
      * Created by Alex Bol on 3/10/2017.
@@ -6036,7 +6036,7 @@
              * Arc center
              * @type {Point}
              */
-            this.pc = new Flatten$1.Point();
+            this.pc = new Flatten.Point();
             /**
              * Arc radius
              * @type {number}
@@ -6056,21 +6056,21 @@
              * Arc orientation
              * @type {boolean}
              */
-            this.counterClockwise = Flatten$1.CCW;
+            this.counterClockwise = Flatten.CCW;
 
             if (args.length === 0)
                 return;
 
             if (args.length === 1 && args[0] instanceof Object && args[0].name === "arc") {
                 let {pc, r, startAngle, endAngle, counterClockwise} = args[0];
-                this.pc = new Flatten$1.Point(pc.x, pc.y);
+                this.pc = new Flatten.Point(pc.x, pc.y);
                 this.r = r;
                 this.startAngle = startAngle;
                 this.endAngle = endAngle;
                 this.counterClockwise = counterClockwise;
             } else {
                 let [pc, r, startAngle, endAngle, counterClockwise] = [...args];
-                if (pc && pc instanceof Flatten$1.Point) this.pc = pc.clone();
+                if (pc && pc instanceof Flatten.Point) this.pc = pc.clone();
                 if (r !== undefined) this.r = r;
                 if (startAngle !== undefined) this.startAngle = startAngle;
                 if (endAngle !== undefined) this.endAngle = endAngle;
@@ -6085,7 +6085,7 @@
          * @returns {Arc}
          */
         clone() {
-            return new Flatten$1.Arc(this.pc.clone(), this.r, this.startAngle, this.endAngle, this.counterClockwise);
+            return new Flatten.Arc(this.pc.clone(), this.r, this.startAngle, this.endAngle, this.counterClockwise);
         }
 
         /**
@@ -6093,25 +6093,25 @@
          * @returns {number}
          */
         get sweep() {
-            if (Flatten$1.Utils.EQ(this.startAngle, this.endAngle))
+            if (Flatten.Utils.EQ(this.startAngle, this.endAngle))
                 return 0.0;
-            if (Flatten$1.Utils.EQ(Math.abs(this.startAngle - this.endAngle), Flatten$1.PIx2)) {
-                return Flatten$1.PIx2;
+            if (Flatten.Utils.EQ(Math.abs(this.startAngle - this.endAngle), Flatten.PIx2)) {
+                return Flatten.PIx2;
             }
             let sweep;
             if (this.counterClockwise) {
-                sweep = Flatten$1.Utils.GT(this.endAngle, this.startAngle) ?
-                    this.endAngle - this.startAngle : this.endAngle - this.startAngle + Flatten$1.PIx2;
+                sweep = Flatten.Utils.GT(this.endAngle, this.startAngle) ?
+                    this.endAngle - this.startAngle : this.endAngle - this.startAngle + Flatten.PIx2;
             } else {
-                sweep = Flatten$1.Utils.GT(this.startAngle, this.endAngle) ?
-                    this.startAngle - this.endAngle : this.startAngle - this.endAngle + Flatten$1.PIx2;
+                sweep = Flatten.Utils.GT(this.startAngle, this.endAngle) ?
+                    this.startAngle - this.endAngle : this.startAngle - this.endAngle + Flatten.PIx2;
             }
 
-            if (Flatten$1.Utils.GT(sweep, Flatten$1.PIx2)) {
-                sweep -= Flatten$1.PIx2;
+            if (Flatten.Utils.GT(sweep, Flatten.PIx2)) {
+                sweep -= Flatten.PIx2;
             }
-            if (Flatten$1.Utils.LT(sweep, 0)) {
-                sweep += Flatten$1.PIx2;
+            if (Flatten.Utils.LT(sweep, 0)) {
+                sweep += Flatten.PIx2;
             }
             return sweep;
         }
@@ -6121,7 +6121,7 @@
          * @returns {Point}
          */
         get start() {
-            let p0 = new Flatten$1.Point(this.pc.x + this.r, this.pc.y);
+            let p0 = new Flatten.Point(this.pc.x + this.r, this.pc.y);
             return p0.rotate(this.startAngle, this.pc);
         }
 
@@ -6130,7 +6130,7 @@
          * @returns {Point}
          */
         get end() {
-            let p0 = new Flatten$1.Point(this.pc.x + this.r, this.pc.y);
+            let p0 = new Flatten.Point(this.pc.x + this.r, this.pc.y);
             return p0.rotate(this.endAngle, this.pc);
         }
 
@@ -6160,7 +6160,7 @@
          */
         get box() {
             let func_arcs = this.breakToFunctional();
-            let box = func_arcs.reduce((acc, arc) => acc.merge(arc.start.box), new Flatten$1.Box());
+            let box = func_arcs.reduce((acc, arc) => acc.merge(arc.start.box), new Flatten.Box());
             box = box.merge(this.end.box);
             return box;
         }
@@ -6172,7 +6172,7 @@
          */
         contains(pt) {
             // first check if  point on circle (pc,r)
-            if (!Flatten$1.Utils.EQ(this.pc.distanceTo(pt)[0], this.r))
+            if (!Flatten.Utils.EQ(this.pc.distanceTo(pt)[0], this.r))
                 return false;
 
             // point on circle
@@ -6180,9 +6180,9 @@
             if (pt.equalTo(this.start))
                 return true;
 
-            let angle = new Flatten$1.Vector(this.pc, pt).slope;
-            let test_arc = new Flatten$1.Arc(this.pc, this.r, this.startAngle, angle, this.counterClockwise);
-            return Flatten$1.Utils.LE(test_arc.length, this.length);
+            let angle = new Flatten.Vector(this.pc, pt).slope;
+            let test_arc = new Flatten.Arc(this.pc, this.r, this.startAngle, angle, this.counterClockwise);
+            return Flatten.Utils.LE(test_arc.length, this.length);
         }
 
         /**
@@ -6199,11 +6199,11 @@
             if (this.end.equalTo(pt))
                 return [this.clone(), null];
 
-            let angle = new Flatten$1.Vector(this.pc, pt).slope;
+            let angle = new Flatten.Vector(this.pc, pt).slope;
 
             return [
-                new Flatten$1.Arc(this.pc, this.r, this.startAngle, angle, this.counterClockwise),
-                new Flatten$1.Arc(this.pc, this.r, angle, this.endAngle, this.counterClockwise)
+                new Flatten.Arc(this.pc, this.r, this.startAngle, angle, this.counterClockwise),
+                new Flatten.Arc(this.pc, this.r, angle, this.endAngle, this.counterClockwise)
             ]
         }
 
@@ -6213,7 +6213,7 @@
          */
         middle() {
             let endAngle = this.counterClockwise ? this.startAngle + this.sweep / 2 : this.startAngle - this.sweep / 2;
-            let arc = new Flatten$1.Arc(this.pc, this.r, this.startAngle, endAngle, this.counterClockwise);
+            let arc = new Flatten.Arc(this.pc, this.r, this.startAngle, endAngle, this.counterClockwise);
             return arc.end;
         }
 
@@ -6228,7 +6228,7 @@
             if (length === this.length) return this.end;
             let factor = length / this.length;
             let endAngle = this.counterClockwise ? this.startAngle + this.sweep * factor : this.startAngle - this.sweep * factor;
-            let arc = new Flatten$1.Arc(this.pc, this.r, this.startAngle, endAngle, this.counterClockwise);
+            let arc = new Flatten.Arc(this.pc, this.r, this.startAngle, endAngle, this.counterClockwise);
             return arc.end;
         }
 
@@ -6246,28 +6246,28 @@
          * @returns {Point[]}
          */
         intersect(shape) {
-            if (shape instanceof Flatten$1.Point) {
+            if (shape instanceof Flatten.Point) {
                 return this.contains(shape) ? [shape] : [];
             }
-            if (shape instanceof Flatten$1.Line) {
+            if (shape instanceof Flatten.Line) {
                 return intersectLine2Arc(shape, this);
             }
-            if (shape instanceof Flatten$1.Ray) {
+            if (shape instanceof Flatten.Ray) {
                 return intersectRay2Arc(shape, this);
             }
-            if (shape instanceof Flatten$1.Circle) {
+            if (shape instanceof Flatten.Circle) {
                 return intersectArc2Circle(this, shape);
             }
-            if (shape instanceof Flatten$1.Segment) {
+            if (shape instanceof Flatten.Segment) {
                 return intersectSegment2Arc(shape, this);
             }
-            if (shape instanceof Flatten$1.Box) {
+            if (shape instanceof Flatten.Box) {
                 return intersectArc2Box(this, shape);
             }
-            if (shape instanceof Flatten$1.Arc) {
+            if (shape instanceof Flatten.Arc) {
                 return intersectArc2Arc(this, shape);
             }
-            if (shape instanceof Flatten$1.Polygon) {
+            if (shape instanceof Flatten.Polygon) {
                 return intersectArc2Polygon(this, shape);
             }
         }
@@ -6280,40 +6280,40 @@
 
          */
         distanceTo(shape) {
-            if (shape instanceof Flatten$1.Point) {
-                let [dist, shortest_segment] = Flatten$1.Distance.point2arc(shape, this);
+            if (shape instanceof Flatten.Point) {
+                let [dist, shortest_segment] = Flatten.Distance.point2arc(shape, this);
                 shortest_segment = shortest_segment.reverse();
                 return [dist, shortest_segment];
             }
 
-            if (shape instanceof Flatten$1.Circle) {
-                let [dist, shortest_segment] = Flatten$1.Distance.arc2circle(this, shape);
+            if (shape instanceof Flatten.Circle) {
+                let [dist, shortest_segment] = Flatten.Distance.arc2circle(this, shape);
                 return [dist, shortest_segment];
             }
 
-            if (shape instanceof Flatten$1.Line) {
-                let [dist, shortest_segment] = Flatten$1.Distance.arc2line(this, shape);
+            if (shape instanceof Flatten.Line) {
+                let [dist, shortest_segment] = Flatten.Distance.arc2line(this, shape);
                 return [dist, shortest_segment];
             }
 
-            if (shape instanceof Flatten$1.Segment) {
-                let [dist, shortest_segment] = Flatten$1.Distance.segment2arc(shape, this);
+            if (shape instanceof Flatten.Segment) {
+                let [dist, shortest_segment] = Flatten.Distance.segment2arc(shape, this);
                 shortest_segment = shortest_segment.reverse();
                 return [dist, shortest_segment];
             }
 
-            if (shape instanceof Flatten$1.Arc) {
-                let [dist, shortest_segment] = Flatten$1.Distance.arc2arc(this, shape);
+            if (shape instanceof Flatten.Arc) {
+                let [dist, shortest_segment] = Flatten.Distance.arc2arc(this, shape);
                 return [dist, shortest_segment];
             }
 
-            if (shape instanceof Flatten$1.Polygon) {
-                let [dist, shortest_segment] = Flatten$1.Distance.shape2polygon(this, shape);
+            if (shape instanceof Flatten.Polygon) {
+                let [dist, shortest_segment] = Flatten.Distance.shape2polygon(this, shape);
                 return [dist, shortest_segment];
             }
 
-            if (shape instanceof Flatten$1.PlanarSet) {
-                let [dist, shortest_segment] = Flatten$1.Distance.shape2planarSet(this, shape);
+            if (shape instanceof Flatten.PlanarSet) {
+                let [dist, shortest_segment] = Flatten.Distance.shape2planarSet(this, shape);
                 return [dist, shortest_segment];
             }
         }
@@ -6337,7 +6337,7 @@
             let test_arcs = [];
             for (let i = 0; i < 4; i++) {
                 if (pts[i].on(this)) {
-                    test_arcs.push(new Flatten$1.Arc(this.pc, this.r, this.startAngle, angles[i], this.counterClockwise));
+                    test_arcs.push(new Flatten.Arc(this.pc, this.r, this.startAngle, angles[i], this.counterClockwise));
                 }
             }
 
@@ -6351,11 +6351,11 @@
                     let prev_arc = func_arcs_array.length > 0 ? func_arcs_array[func_arcs_array.length - 1] : undefined;
                     let new_arc;
                     if (prev_arc) {
-                        new_arc = new Flatten$1.Arc(this.pc, this.r, prev_arc.endAngle, test_arcs[i].endAngle, this.counterClockwise);
+                        new_arc = new Flatten.Arc(this.pc, this.r, prev_arc.endAngle, test_arcs[i].endAngle, this.counterClockwise);
                     } else {
-                        new_arc = new Flatten$1.Arc(this.pc, this.r, this.startAngle, test_arcs[i].endAngle, this.counterClockwise);
+                        new_arc = new Flatten.Arc(this.pc, this.r, this.startAngle, test_arcs[i].endAngle, this.counterClockwise);
                     }
-                    if (!Flatten$1.Utils.EQ_0(new_arc.length)) {
+                    if (!Flatten.Utils.EQ_0(new_arc.length)) {
                         func_arcs_array.push(new_arc.clone());
                     }
                 }
@@ -6364,12 +6364,12 @@
                 let prev_arc = func_arcs_array.length > 0 ? func_arcs_array[func_arcs_array.length - 1] : undefined;
                 let new_arc;
                 if (prev_arc) {
-                    new_arc = new Flatten$1.Arc(this.pc, this.r, prev_arc.endAngle, this.endAngle, this.counterClockwise);
+                    new_arc = new Flatten.Arc(this.pc, this.r, prev_arc.endAngle, this.endAngle, this.counterClockwise);
                 } else {
-                    new_arc = new Flatten$1.Arc(this.pc, this.r, this.startAngle, this.endAngle, this.counterClockwise);
+                    new_arc = new Flatten.Arc(this.pc, this.r, this.startAngle, this.endAngle, this.counterClockwise);
                 }
                 // It could be 2*PI when occasionally start = 0 and end = 2*PI but this is not valid for breakToFunctional
-                if (!Flatten$1.Utils.EQ_0(new_arc.length) && !Flatten$1.Utils.EQ(new_arc.sweep, 2*Math.PI)) {
+                if (!Flatten.Utils.EQ_0(new_arc.length) && !Flatten.Utils.EQ(new_arc.sweep, 2*Math.PI)) {
                     func_arcs_array.push(new_arc.clone());
                 }
             }
@@ -6381,7 +6381,7 @@
          * @returns {Vector}
          */
         tangentInStart() {
-            let vec = new Flatten$1.Vector(this.pc, this.start);
+            let vec = new Flatten.Vector(this.pc, this.start);
             let angle = this.counterClockwise ? Math.PI / 2. : -Math.PI / 2.;
             return vec.rotate(angle).normalize();
         }
@@ -6391,7 +6391,7 @@
          * @returns {Vector}
          */
         tangentInEnd() {
-            let vec = new Flatten$1.Vector(this.pc, this.end);
+            let vec = new Flatten.Vector(this.pc, this.end);
             let angle = this.counterClockwise ? -Math.PI / 2. : Math.PI / 2.;
             return vec.rotate(angle).normalize();
         }
@@ -6401,7 +6401,7 @@
          * @returns {Arc}
          */
         reverse() {
-            return new Flatten$1.Arc(this.pc, this.r, this.endAngle, this.startAngle, !this.counterClockwise);
+            return new Flatten.Arc(this.pc, this.r, this.endAngle, this.startAngle, !this.counterClockwise);
         }
 
         /**
@@ -6409,7 +6409,7 @@
          * @param {Matrix} matrix - affine transformation matrix
          * @returns {Arc}
          */
-        transform(matrix = new Flatten$1.Matrix()) {
+        transform(matrix = new Flatten.Matrix()) {
             let newStart = this.start.transform(matrix);
             let newEnd = this.end.transform(matrix);
             let newCenter = this.pc.transform(matrix);
@@ -6417,20 +6417,20 @@
             if (matrix.a * matrix.d < 0) {
               newDirection = !newDirection;
             }
-            return Flatten$1.Arc.arcSE(newCenter, newStart, newEnd, newDirection);
+            return Flatten.Arc.arcSE(newCenter, newStart, newEnd, newDirection);
         }
 
         static arcSE(center, start, end, counterClockwise) {
-            let {vector} = Flatten$1;
+            let {vector} = Flatten;
             let startAngle = vector(center, start).slope;
             let endAngle = vector(center, end).slope;
-            if (Flatten$1.Utils.EQ(startAngle, endAngle)) {
+            if (Flatten.Utils.EQ(startAngle, endAngle)) {
                 endAngle += 2 * Math.PI;
                 counterClockwise = true;
             }
             let r = vector(center, start).length;
 
-            return new Flatten$1.Arc(center, r, startAngle, endAngle, counterClockwise);
+            return new Flatten.Arc(center, r, startAngle, endAngle, counterClockwise);
         }
 
         definiteIntegral(ymin = 0) {
@@ -6440,9 +6440,9 @@
         }
 
         circularSegmentDefiniteIntegral(ymin) {
-            let line = new Flatten$1.Line(this.start, this.end);
+            let line = new Flatten.Line(this.start, this.end);
             let onLeftSide = this.pc.leftTo(line);
-            let segment = new Flatten$1.Segment(this.start, this.end);
+            let segment = new Flatten.Segment(this.start, this.end);
             let areaTrapez = segment.definiteIntegral(ymin);
             let areaCircularSegment = this.circularSegmentArea();
             let area = onLeftSide ? areaTrapez - areaCircularSegment : areaTrapez + areaCircularSegment;
@@ -6459,7 +6459,7 @@
          * @returns {Point[]} new array sorted
          */
         sortPoints(pts) {
-            let {vector} = Flatten$1;
+            let {vector} = Flatten;
             return pts.slice().sort( (pt1, pt2) => {
                 let slope1 = vector(this.pc, pt1).slope;
                 let slope2 = vector(this.pc, pt2).slope;
@@ -6486,8 +6486,8 @@
             let largeArcFlag = this.sweep <= Math.PI ? "0" : "1";
             let sweepFlag = this.counterClockwise ? "1" : "0";
 
-            if (Flatten$1.Utils.EQ(this.sweep, 2 * Math.PI)) {
-                let circle = new Flatten$1.Circle(this.pc, this.r);
+            if (Flatten.Utils.EQ(this.sweep, 2 * Math.PI)) {
+                let circle = new Flatten.Circle(this.pc, this.r);
                 return circle.svg(attrs);
             } else {
                 return `\n<path d="M${this.start.x},${this.start.y}
@@ -6498,13 +6498,13 @@
 
     }
 
-    Flatten$1.Arc = Arc;
+    Flatten.Arc = Arc;
     /**
      * Function to create arc equivalent to "new" constructor
      * @param args
      */
-    const arc = (...args) => new Flatten$1.Arc(...args);
-    Flatten$1.arc = arc;
+    const arc = (...args) => new Flatten.Arc(...args);
+    Flatten.arc = arc;
 
     /**
      * Created by Alex Bol on 3/7/2017.
@@ -6560,7 +6560,7 @@
          * @returns {Point}
          */
         get low() {
-            return new Flatten$1.Point(this.xmin, this.ymin);
+            return new Flatten.Point(this.xmin, this.ymin);
         }
 
         /**
@@ -6568,7 +6568,7 @@
          * @returns {Point}
          */
         get high() {
-            return new Flatten$1.Point(this.xmax, this.ymax);
+            return new Flatten.Point(this.xmax, this.ymax);
         }
 
         /**
@@ -6584,7 +6584,7 @@
          * @returns {Point}
          */
         get center() {
-            return new Flatten$1.Point((this.xmin + this.xmax) / 2, (this.ymin + this.ymax) / 2);
+            return new Flatten.Point((this.xmin + this.xmax) / 2, (this.ymin + this.ymax) / 2);
         }
 
         /**
@@ -6703,10 +6703,10 @@
          */
         toPoints() {
             return [
-                new Flatten$1.Point(this.xmin, this.ymin),
-                new Flatten$1.Point(this.xmax, this.ymin),
-                new Flatten$1.Point(this.xmax, this.ymax),
-                new Flatten$1.Point(this.xmin, this.ymax)
+                new Flatten.Point(this.xmin, this.ymin),
+                new Flatten.Point(this.xmax, this.ymin),
+                new Flatten.Point(this.xmax, this.ymax),
+                new Flatten.Point(this.xmin, this.ymax)
             ];
         }
 
@@ -6717,10 +6717,10 @@
         toSegments() {
             let pts = this.toPoints();
             return [
-                new Flatten$1.Segment(pts[0], pts[1]),
-                new Flatten$1.Segment(pts[1], pts[2]),
-                new Flatten$1.Segment(pts[2], pts[3]),
-                new Flatten$1.Segment(pts[3], pts[0])
+                new Flatten.Segment(pts[0], pts[1]),
+                new Flatten.Segment(pts[1], pts[2]),
+                new Flatten.Segment(pts[2], pts[3]),
+                new Flatten.Segment(pts[3], pts[0])
             ];
         }
 
@@ -6730,7 +6730,7 @@
          * @param {number} angle - angle in radians
          * @param {Point} [center=(0,0)] center
          */
-        rotate(angle, center = new Flatten$1.Point()) {
+        rotate(angle, center = new Flatten.Point()) {
                 throw Errors.OPERATION_IS_NOT_SUPPORTED
         }
 
@@ -6740,7 +6740,7 @@
          * @param {Matrix} m - affine transformation matrix
          * @returns {Box}
          */
-        transform(m = new Flatten$1.Matrix()) {
+        transform(m = new Flatten.Matrix()) {
             const transformed_points = this.toPoints().map(pt => pt.transform(m));
             return transformed_points.reduce(
                 (new_box, pt) => new_box.merge(pt.box), new Box())
@@ -6752,36 +6752,36 @@
          * @returns {boolean}
          */
         contains(shape) {
-            if (shape instanceof Flatten$1.Point) {
+            if (shape instanceof Flatten.Point) {
                 return (shape.x >= this.xmin) && (shape.x <= this.xmax) && (shape.y >= this.ymin) && (shape.y <= this.ymax);
             }
 
-            if (shape instanceof Flatten$1.Segment) {
+            if (shape instanceof Flatten.Segment) {
                 return shape.vertices.every(vertex => this.contains(vertex))
             }
 
-            if (shape instanceof Flatten$1.Box) {
+            if (shape instanceof Flatten.Box) {
                 return shape.toSegments().every(segment => this.contains(segment))
             }
 
-            if (shape instanceof Flatten$1.Circle) {
+            if (shape instanceof Flatten.Circle) {
                 return this.contains(shape.box)
             }
 
-            if (shape instanceof Flatten$1.Arc) {
+            if (shape instanceof Flatten.Arc) {
                 return shape.vertices.every(vertex => this.contains(vertex)) &&
                     shape.toSegments().every(segment => intersectSegment2Arc(segment, shape).length === 0)
             }
 
-            if (shape instanceof Flatten$1.Line || shape instanceof Flatten$1.Ray) {
+            if (shape instanceof Flatten.Line || shape instanceof Flatten.Ray) {
                 return false
             }
 
-            if (shape instanceof Flatten$1.Multiline) {
+            if (shape instanceof Flatten.Multiline) {
                 return shape.toShapes().every(shape => this.contains(shape))
             }
 
-            if (shape instanceof Flatten$1.Polygon) {
+            if (shape instanceof Flatten.Polygon) {
                 return this.contains(shape.box)
             }
         }
@@ -6803,14 +6803,14 @@
         };
     }
 
-    Flatten$1.Box = Box;
+    Flatten.Box = Box;
     /**
      * Shortcut to create new box
      * @param args
      * @returns {Box}
      */
-    const box = (...args) => new Flatten$1.Box(...args);
-    Flatten$1.box = box;
+    const box = (...args) => new Flatten.Box(...args);
+    Flatten.box = box;
 
     /**
      * Created by Alex Bol on 3/17/2017.
@@ -6906,19 +6906,19 @@
         }
 
         get isSegment() {
-            return this.shape instanceof Flatten$1.Segment;
+            return this.shape instanceof Flatten.Segment;
         }
 
         get isArc() {
-            return this.shape instanceof Flatten$1.Arc;
+            return this.shape instanceof Flatten.Arc;
         }
 
         get isLine() {
-            return this.shape instanceof Flatten$1.Line;
+            return this.shape instanceof Flatten.Line;
         }
 
         get isRay() {
-            return this.shape instanceof Flatten$1.Ray
+            return this.shape instanceof Flatten.Ray
         }
 
         /**
@@ -6954,8 +6954,8 @@
         setInclusion(polygon) {
             if (this.bv !== undefined) return this.bv;
 
-            if (this.shape instanceof Flatten$1.Line || this.shape instanceof Flatten$1.Ray) {
-                this.bv = Flatten$1.OUTSIDE;
+            if (this.shape instanceof Flatten.Line || this.shape instanceof Flatten.Ray) {
+                this.bv = Flatten.OUTSIDE;
                 return this.bv;
             }
 
@@ -6966,12 +6966,12 @@
                 this.bvEnd = ray_shoot(polygon, this.end);
             }
             /* At least one end outside - the whole edge outside */
-            if (this.bvStart === Flatten$1.OUTSIDE || this.bvEnd == Flatten$1.OUTSIDE) {
-                this.bv = Flatten$1.OUTSIDE;
+            if (this.bvStart === Flatten.OUTSIDE || this.bvEnd == Flatten.OUTSIDE) {
+                this.bv = Flatten.OUTSIDE;
             }
             /* At least one end inside - the whole edge inside */
-            else if (this.bvStart === Flatten$1.INSIDE || this.bvEnd == Flatten$1.INSIDE) {
-                this.bv = Flatten$1.INSIDE;
+            else if (this.bvStart === Flatten.INSIDE || this.bvEnd == Flatten.INSIDE) {
+                this.bv = Flatten.INSIDE;
             }
             /* Both are boundary - check the middle point */
             else {
@@ -6993,26 +6993,26 @@
             let shape1 = this.shape;
             let shape2 = edge.shape;
 
-            if (shape1 instanceof Flatten$1.Segment && shape2 instanceof Flatten$1.Segment) {
+            if (shape1 instanceof Flatten.Segment && shape2 instanceof Flatten.Segment) {
                 if (shape1.start.equalTo(shape2.start) && shape1.end.equalTo(shape2.end)) {
-                    flag = Flatten$1.OVERLAP_SAME;
+                    flag = Flatten.OVERLAP_SAME;
                 } else if (shape1.start.equalTo(shape2.end) && shape1.end.equalTo(shape2.start)) {
-                    flag = Flatten$1.OVERLAP_OPPOSITE;
+                    flag = Flatten.OVERLAP_OPPOSITE;
                 }
-            } else if (shape1 instanceof Flatten$1.Arc && shape2 instanceof Flatten$1.Arc) {
+            } else if (shape1 instanceof Flatten.Arc && shape2 instanceof Flatten.Arc) {
                 if (shape1.start.equalTo(shape2.start) && shape1.end.equalTo(shape2.end) && /*shape1.counterClockwise === shape2.counterClockwise &&*/
                     shape1.middle().equalTo(shape2.middle())) {
-                    flag = Flatten$1.OVERLAP_SAME;
+                    flag = Flatten.OVERLAP_SAME;
                 } else if (shape1.start.equalTo(shape2.end) && shape1.end.equalTo(shape2.start) && /*shape1.counterClockwise !== shape2.counterClockwise &&*/
                     shape1.middle().equalTo(shape2.middle())) {
-                    flag = Flatten$1.OVERLAP_OPPOSITE;
+                    flag = Flatten.OVERLAP_OPPOSITE;
                 }
-            } else if (shape1 instanceof Flatten$1.Segment && shape2 instanceof Flatten$1.Arc ||
-                shape1 instanceof Flatten$1.Arc && shape2 instanceof Flatten$1.Segment) {
+            } else if (shape1 instanceof Flatten.Segment && shape2 instanceof Flatten.Arc ||
+                shape1 instanceof Flatten.Arc && shape2 instanceof Flatten.Segment) {
                 if (shape1.start.equalTo(shape2.start) && shape1.end.equalTo(shape2.end) && shape1.middle().equalTo(shape2.middle())) {
-                    flag = Flatten$1.OVERLAP_SAME;
+                    flag = Flatten.OVERLAP_SAME;
                 } else if (shape1.start.equalTo(shape2.end) && shape1.end.equalTo(shape2.start) && shape1.middle().equalTo(shape2.middle())) {
-                    flag = Flatten$1.OVERLAP_OPPOSITE;
+                    flag = Flatten.OVERLAP_OPPOSITE;
                 }
             }
 
@@ -7022,18 +7022,18 @@
         }
 
         svg() {
-            if (this.shape instanceof Flatten$1.Segment) {
+            if (this.shape instanceof Flatten.Segment) {
                 return ` L${this.shape.end.x},${this.shape.end.y}`;
-            } else if (this.shape instanceof Flatten$1.Arc) {
+            } else if (this.shape instanceof Flatten.Arc) {
                 let arc = this.shape;
                 let largeArcFlag;
                 let sweepFlag = arc.counterClockwise ? "1" : "0";
 
                 // Draw full circe arc as special case: split it into two half-circles
-                if (Flatten$1.Utils.EQ(arc.sweep, 2 * Math.PI)) {
+                if (Flatten.Utils.EQ(arc.sweep, 2 * Math.PI)) {
                     let sign = arc.counterClockwise ? 1 : -1;
-                    let halfArc1 = new Flatten$1.Arc(arc.pc, arc.r, arc.startAngle, arc.startAngle + sign * Math.PI, arc.counterClockwise);
-                    let halfArc2 = new Flatten$1.Arc(arc.pc, arc.r, arc.startAngle + sign * Math.PI, arc.endAngle, arc.counterClockwise);
+                    let halfArc1 = new Flatten.Arc(arc.pc, arc.r, arc.startAngle, arc.startAngle + sign * Math.PI, arc.counterClockwise);
+                    let halfArc2 = new Flatten.Arc(arc.pc, arc.r, arc.startAngle + sign * Math.PI, arc.endAngle, arc.counterClockwise);
 
                     largeArcFlag = "0";
 
@@ -7051,7 +7051,7 @@
             return this.shape.toJSON();
         }
     }
-    Flatten$1.Edge = Edge;
+    Flatten.Edge = Edge;
 
     /**
      * Class implements circular bidirectional linked list <br/>
@@ -7174,19 +7174,19 @@
                         return;
 
                     /* array of Flatten.Points */
-                    if (shapes.every((shape) => {return shape instanceof Flatten$1.Point})) {
+                    if (shapes.every((shape) => {return shape instanceof Flatten.Point})) {
                         let segments = Face.points2segments(shapes);
                         this.shapes2face(polygon.edges, segments);
                     }
                     /* array of points as pairs of numbers */
                     else if (shapes.every((shape) => {return shape instanceof Array && shape.length === 2})) {
-                        let points = shapes.map((shape) => new Flatten$1.Point(shape[0],shape[1]));
+                        let points = shapes.map((shape) => new Flatten.Point(shape[0],shape[1]));
                         let segments = Face.points2segments(points);
                         this.shapes2face(polygon.edges, segments);
                     }
                     /* array of segments ot arcs */
                     else if (shapes.every((shape) => {
-                        return (shape instanceof Flatten$1.Segment || shape instanceof Flatten$1.Arc)
+                        return (shape instanceof Flatten.Segment || shape instanceof Flatten.Arc)
                     })) {
                         this.shapes2face(polygon.edges, shapes);
                     }
@@ -7198,9 +7198,9 @@
                         for (let shape of shapes) {
                             let flattenShape;
                             if (shape.name === "segment") {
-                                flattenShape = new Flatten$1.Segment(shape);
+                                flattenShape = new Flatten.Segment(shape);
                             } else {
-                                flattenShape = new Flatten$1.Arc(shape);
+                                flattenShape = new Flatten.Arc(shape);
                             }
                             flattenShapes.push(flattenShape);
                         }
@@ -7217,24 +7217,24 @@
                     }
                 }
                 /* Instantiate face from a circle in CCW orientation */
-                else if (args[0] instanceof Flatten$1.Circle) {
+                else if (args[0] instanceof Flatten.Circle) {
                     this.shapes2face(polygon.edges, [args[0].toArc(CCW)]);
                 }
                 /* Instantiate face from a box in CCW orientation */
-                else if (args[0] instanceof Flatten$1.Box) {
+                else if (args[0] instanceof Flatten.Box) {
                     let box = args[0];
                     this.shapes2face(polygon.edges, [
-                        new Flatten$1.Segment(new Flatten$1.Point(box.xmin, box.ymin), new Flatten$1.Point(box.xmax, box.ymin)),
-                        new Flatten$1.Segment(new Flatten$1.Point(box.xmax, box.ymin), new Flatten$1.Point(box.xmax, box.ymax)),
-                        new Flatten$1.Segment(new Flatten$1.Point(box.xmax, box.ymax), new Flatten$1.Point(box.xmin, box.ymax)),
-                        new Flatten$1.Segment(new Flatten$1.Point(box.xmin, box.ymax), new Flatten$1.Point(box.xmin, box.ymin))
+                        new Flatten.Segment(new Flatten.Point(box.xmin, box.ymin), new Flatten.Point(box.xmax, box.ymin)),
+                        new Flatten.Segment(new Flatten.Point(box.xmax, box.ymin), new Flatten.Point(box.xmax, box.ymax)),
+                        new Flatten.Segment(new Flatten.Point(box.xmax, box.ymax), new Flatten.Point(box.xmin, box.ymax)),
+                        new Flatten.Segment(new Flatten.Point(box.xmin, box.ymax), new Flatten.Point(box.xmin, box.ymin))
                     ]);
                 }
             }
             /* If passed two edges, consider them as start and end of the face loop */
             /* THIS METHOD WILL BE USED BY BOOLEAN OPERATIONS */
             /* Assume that edges already copied to polygon.edges set in the clip algorithm !!! */
-            if (args.length === 2 && args[0] instanceof Flatten$1.Edge && args[1] instanceof Flatten$1.Edge) {
+            if (args.length === 2 && args[0] instanceof Flatten.Edge && args[1] instanceof Flatten.Edge) {
                 this.first = args[0];                          // first edge in face or undefined
                 this.last = args[1];                           // last edge in face or undefined
                 this.last.next = this.first;
@@ -7270,7 +7270,7 @@
          */
         get box() {
             if (this._box === undefined) {
-                let box = new Flatten$1.Box();
+                let box = new Flatten.Box();
                 for (let edge of this) {
                     box = box.merge(edge.box);
                 }
@@ -7311,14 +7311,14 @@
                 // skip zero length segment
                 if (points[i].equalTo(points[(i + 1) % points.length]))
                     continue;
-                segments.push(new Flatten$1.Segment(points[i], points[(i + 1) % points.length]));
+                segments.push(new Flatten.Segment(points[i], points[(i + 1) % points.length]));
             }
             return segments;
         }
 
         shapes2face(edges, shapes) {
             for (let shape of shapes) {
-                let edge = new Flatten$1.Edge(shape);
+                let edge = new Flatten.Edge(shape);
                 this.append(edge);
                 // this.box = this.box.merge(shape.box);
                 edges.add(edge);
@@ -7486,9 +7486,9 @@
         orientation() {
             if (this._orientation === undefined) {
                 let area = this.signedArea();
-                if (Flatten$1.Utils.EQ_0(area)) {
+                if (Flatten.Utils.EQ_0(area)) {
                     this._orientation = ORIENTATION.NOT_ORIENTABLE;
-                } else if (Flatten$1.Utils.LT(area, 0)) {
+                } else if (Flatten.Utils.LT(area, 0)) {
                     this._orientation = ORIENTATION.CCW;
                 } else {
                     this._orientation = ORIENTATION.CW;
@@ -7530,7 +7530,7 @@
                         continue;
 
                     // Skip next and previous edge if both are segment (if one of them arc - calc intersection)
-                    if (edge1.shape instanceof Flatten$1.Segment && edge2.shape instanceof Flatten$1.Segment &&
+                    if (edge1.shape instanceof Flatten.Segment && edge2.shape instanceof Flatten.Segment &&
                         (edge1.next === edge2 || edge1.prev === edge2))
                         continue;
 
@@ -7585,7 +7585,7 @@
          * @returns {Polygon}
          */
         toPolygon() {
-            return new Flatten$1.Polygon(this.shapes);
+            return new Flatten.Polygon(this.shapes);
         }
 
         toJSON() {
@@ -7607,7 +7607,7 @@
 
     }
 
-    Flatten$1.Face = Face;
+    Flatten.Face = Face;
 
     /**
      * Class representing a ray (a half-infinite line).
@@ -7626,14 +7626,14 @@
          */
         constructor(...args) {
             super();
-            this.pt = new Flatten$1.Point();
-            this.norm = new Flatten$1.Vector(0,1);
+            this.pt = new Flatten.Point();
+            this.norm = new Flatten.Vector(0,1);
 
             if (args.length === 0) {
                 return;
             }
 
-            if (args.length >= 1 && args[0] instanceof Flatten$1.Point) {
+            if (args.length >= 1 && args[0] instanceof Flatten.Point) {
                 this.pt = args[0].clone();
             }
 
@@ -7641,7 +7641,7 @@
                 return;
             }
 
-            if (args.length === 2 && args[1] instanceof Flatten$1.Vector) {
+            if (args.length === 2 && args[1] instanceof Flatten.Vector) {
                 this.norm = args[1].clone();
                 return;
             }
@@ -7662,7 +7662,7 @@
          * @returns {number} - slope of the line
          */
         get slope() {
-            let vec = new Flatten$1.Vector(this.norm.y, -this.norm.x);
+            let vec = new Flatten.Vector(this.norm.y, -this.norm.x);
             return vec.slope;
         }
 
@@ -7672,7 +7672,7 @@
          */
         get box() {
             let slope = this.slope;
-            return new Flatten$1.Box(
+            return new Flatten.Box(
                 slope > Math.PI/2 && slope < 3*Math.PI/2 ? Number.NEGATIVE_INFINITY : this.pt.x,
                 slope >= 0 && slope <= Math.PI ? this.pt.y : Number.NEGATIVE_INFINITY,
                 slope >= Math.PI/2 && slope <= 3*Math.PI/2 ? this.pt.x : Number.POSITIVE_INFINITY,
@@ -7711,8 +7711,8 @@
             }
             /* Ray contains point if vector to point is orthogonal to the ray normal vector
                 and cross product from vector to point is positive */
-            let vec = new Flatten$1.Vector(this.pt, pt);
-            return Flatten$1.Utils.EQ_0(this.norm.dot(vec)) && Flatten$1.Utils.GE(vec.cross(this.norm),0);
+            let vec = new Flatten.Vector(this.pt, pt);
+            return Flatten.Utils.EQ_0(this.norm.dot(vec)) && Flatten.Utils.GE(vec.cross(this.norm),0);
         }
 
         /**
@@ -7741,8 +7741,8 @@
             }
 
             return [
-                new Flatten$1.Segment(this.pt, pt),
-                new Flatten$1.Ray(pt, this.norm)
+                new Flatten.Segment(this.pt, pt),
+                new Flatten.Ray(pt, this.norm)
             ]
         }
 
@@ -7752,35 +7752,35 @@
          * @returns {Point[]} array of intersection points
          */
         intersect(shape) {
-            if (shape instanceof Flatten$1.Point) {
+            if (shape instanceof Flatten.Point) {
                 return this.contains(shape) ? [shape] : [];
             }
 
-            if (shape instanceof Flatten$1.Segment) {
+            if (shape instanceof Flatten.Segment) {
                 return intersectRay2Segment(this, shape);
             }
 
-            if (shape instanceof Flatten$1.Arc) {
+            if (shape instanceof Flatten.Arc) {
                 return intersectRay2Arc(this, shape);
             }
 
-            if (shape instanceof Flatten$1.Line) {
+            if (shape instanceof Flatten.Line) {
                 return intersectRay2Line(this, shape);
             }
 
-            if (shape instanceof Flatten$1.Ray) {
+            if (shape instanceof Flatten.Ray) {
                 return intersectRay2Ray(this, shape)
             }
 
-            if (shape instanceof Flatten$1.Circle) {
+            if (shape instanceof Flatten.Circle) {
                 return intersectRay2Circle(this, shape);
             }
 
-            if (shape instanceof Flatten$1.Box) {
+            if (shape instanceof Flatten.Box) {
                 return intersectRay2Box(this, shape);
             }
 
-            if (shape instanceof Flatten$1.Polygon) {
+            if (shape instanceof Flatten.Polygon) {
                 return  intersectRay2Polygon(this, shape);
             }
         }
@@ -7790,8 +7790,8 @@
          * @param {number} angle - angle in radians
          * @param {Point} center - center of rotation
          */
-        rotate(angle, center = new Flatten$1.Point()) {
-            return new Flatten$1.Ray(
+        rotate(angle, center = new Flatten.Point()) {
+            return new Flatten.Ray(
                 this.pt.rotate(angle, center),
                 this.norm.rotate(angle)
             )
@@ -7803,7 +7803,7 @@
          * @returns {Ray}
          */
         transform(m) {
-            return new Flatten$1.Ray(
+            return new Flatten.Ray(
                 this.pt.transform(m),
                 this.norm.clone()
             )
@@ -7819,21 +7819,21 @@
          * @param {Object} attrs - an object with attributes of svg segment element
          */
         svg(box, attrs = {}) {
-            let line = new Flatten$1.Line(this.pt, this.norm);
+            let line = new Flatten.Line(this.pt, this.norm);
             let ip = intersectLine2Box(line, box);
             ip = ip.filter( pt => this.contains(pt) );
             if (ip.length === 0 || ip.length === 2)
                 return "";
-            let segment = new Flatten$1.Segment(this.pt, ip[0]);
+            let segment = new Flatten.Segment(this.pt, ip[0]);
             return segment.svg(attrs);
         }
 
     }
 
-    Flatten$1.Ray = Ray;
+    Flatten.Ray = Ray;
 
-    const ray = (...args) => new Flatten$1.Ray(...args);
-    Flatten$1.ray = ray;
+    const ray = (...args) => new Flatten.Ray(...args);
+    Flatten.ray = ray;
 
     /**
      * Created by Alex Bol on 3/15/2017.
@@ -7864,12 +7864,12 @@
              * Container of faces (closed loops), may be empty
              * @type {PlanarSet}
              */
-            this.faces = new Flatten$1.PlanarSet();
+            this.faces = new Flatten.PlanarSet();
             /**
              * Container of edges
              * @type {PlanarSet}
              */
-            this.edges = new Flatten$1.PlanarSet();
+            this.edges = new Flatten.PlanarSet();
 
             /* It may be array of something that may represent one loop (face) or
              array of arrays that represent multiple loops
@@ -7877,7 +7877,7 @@
             let args = [...arguments];
             if (args.length === 1 &&
                 ((args[0] instanceof Array && args[0].length > 0) ||
-                    args[0] instanceof Flatten$1.Circle || args[0] instanceof Flatten$1.Box)) {
+                    args[0] instanceof Flatten.Circle || args[0] instanceof Flatten.Box)) {
                 let argsArray = args[0];
                 if (args[0] instanceof Array && args[0].every((loop) => {
                     return loop instanceof Array
@@ -7885,7 +7885,7 @@
                     if (argsArray.every(el => {
                         return el instanceof Array && el.length === 2 && typeof (el[0]) === "number" && typeof (el[1]) === "number"
                     })) {
-                        this.faces.add(new Flatten$1.Face(this, argsArray));    // one-loop polygon as array of pairs of numbers
+                        this.faces.add(new Flatten.Face(this, argsArray));    // one-loop polygon as array of pairs of numbers
                     } else {
                         for (let loop of argsArray) {   // multi-loop polygon
                             /* Check extra level of nesting for GeoJSON-style multi polygons */
@@ -7894,15 +7894,15 @@
                                     return el instanceof Array && el.length === 2 && typeof (el[0]) === "number" && typeof (el[1]) === "number"
                                 })) {
                                 for (let loop1 of loop) {
-                                    this.faces.add(new Flatten$1.Face(this, loop1));
+                                    this.faces.add(new Flatten.Face(this, loop1));
                                 }
                             } else {
-                                this.faces.add(new Flatten$1.Face(this, loop));
+                                this.faces.add(new Flatten.Face(this, loop));
                             }
                         }
                     }
                 } else {
-                    this.faces.add(new Flatten$1.Face(this, argsArray));    // one-loop polygon
+                    this.faces.add(new Flatten.Face(this, argsArray));    // one-loop polygon
                 }
             }
         }
@@ -7912,7 +7912,7 @@
          * @returns {Box}
          */
         get box() {
-            return [...this.faces].reduce((acc, face) => acc.merge(face.box), new Flatten$1.Box());
+            return [...this.faces].reduce((acc, face) => acc.merge(face.box), new Flatten.Box());
         }
 
         /**
@@ -7985,7 +7985,7 @@
          * @returns {Face}
          */
         addFace(...args) {
-            let face = new Flatten$1.Face(this, ...args);
+            let face = new Flatten.Face(this, ...args);
             this.faces.add(face);
             return face;
         }
@@ -8078,7 +8078,7 @@
             if (shapes[1] === null)   // point incident to edge end vertex, return edge itself
                 return edge;
 
-            let newEdge = new Flatten$1.Edge(shapes[0]);
+            let newEdge = new Flatten.Edge(shapes[0]);
             let edgeBefore = edge.prev;
 
             /* Insert first split edge into linked list after edgeBefore */
@@ -8199,7 +8199,7 @@
                     insertBetweenIntPoints(intersections.int_points2[int_point1_prev.id], intersections.int_points2[int_point1_curr.id], newEdges);
                     newEdges.forEach(edge => newPoly.edges.add(edge));
 
-                    newEdges = newEdges.reverse().map(edge => new Flatten$1.Edge(edge.shape.reverse()));
+                    newEdges = newEdges.reverse().map(edge => new Flatten.Edge(edge.shape.reverse()));
                     for (let k=0; k < newEdges.length-1; k++) {
                         newEdges[k].next = newEdges[k+1];
                         newEdges[k+1].prev = newEdges[k];
@@ -8291,7 +8291,7 @@
          * @returns {boolean}
          */
         contains(shape) {
-            if (shape instanceof Flatten$1.Point) {
+            if (shape instanceof Flatten.Point) {
                 let rel = ray_shoot(this, shape);
                 return rel === INSIDE$2 || rel === BOUNDARY$1;
             } else {
@@ -8307,31 +8307,31 @@
         distanceTo(shape) {
             // let {Distance} = Flatten;
 
-            if (shape instanceof Flatten$1.Point) {
-                let [dist, shortest_segment] = Flatten$1.Distance.point2polygon(shape, this);
+            if (shape instanceof Flatten.Point) {
+                let [dist, shortest_segment] = Flatten.Distance.point2polygon(shape, this);
                 shortest_segment = shortest_segment.reverse();
                 return [dist, shortest_segment];
             }
 
-            if (shape instanceof Flatten$1.Circle ||
-                shape instanceof Flatten$1.Line ||
-                shape instanceof Flatten$1.Segment ||
-                shape instanceof Flatten$1.Arc) {
-                let [dist, shortest_segment] = Flatten$1.Distance.shape2polygon(shape, this);
+            if (shape instanceof Flatten.Circle ||
+                shape instanceof Flatten.Line ||
+                shape instanceof Flatten.Segment ||
+                shape instanceof Flatten.Arc) {
+                let [dist, shortest_segment] = Flatten.Distance.shape2polygon(shape, this);
                 shortest_segment = shortest_segment.reverse();
                 return [dist, shortest_segment];
             }
 
             /* this method is bit faster */
-            if (shape instanceof Flatten$1.Polygon) {
-                let min_dist_and_segment = [Number.POSITIVE_INFINITY, new Flatten$1.Segment()];
+            if (shape instanceof Flatten.Polygon) {
+                let min_dist_and_segment = [Number.POSITIVE_INFINITY, new Flatten.Segment()];
                 let dist, shortest_segment;
 
                 for (let edge of this.edges) {
                     // let [dist, shortest_segment] = Distance.shape2polygon(edge.shape, shape);
                     let min_stop = min_dist_and_segment[0];
-                    [dist, shortest_segment] = Flatten$1.Distance.shape2planarSet(edge.shape, shape.edges, min_stop);
-                    if (Flatten$1.Utils.LT(dist, min_stop)) {
+                    [dist, shortest_segment] = Flatten.Distance.shape2planarSet(edge.shape, shape.edges, min_stop);
+                    if (Flatten.Utils.LT(dist, min_stop)) {
                         min_dist_and_segment = [dist, shortest_segment];
                     }
                 }
@@ -8345,31 +8345,31 @@
          * @returns {Point[]}
          */
         intersect(shape) {
-            if (shape instanceof Flatten$1.Point) {
+            if (shape instanceof Flatten.Point) {
                 return this.contains(shape) ? [shape] : [];
             }
 
-            if (shape instanceof Flatten$1.Line) {
+            if (shape instanceof Flatten.Line) {
                 return intersectLine2Polygon(shape, this);
             }
 
-            if (shape instanceof Flatten$1.Ray) {
+            if (shape instanceof Flatten.Ray) {
                 return intersectRay2Polygon(shape, this);
             }
 
-            if (shape instanceof Flatten$1.Circle) {
+            if (shape instanceof Flatten.Circle) {
                 return intersectCircle2Polygon(shape, this);
             }
 
-            if (shape instanceof Flatten$1.Segment) {
+            if (shape instanceof Flatten.Segment) {
                 return intersectSegment2Polygon(shape, this);
             }
 
-            if (shape instanceof Flatten$1.Arc) {
+            if (shape instanceof Flatten.Arc) {
                 return intersectArc2Polygon(shape, this);
             }
 
-            if (shape instanceof Flatten$1.Polygon) {
+            if (shape instanceof Flatten.Polygon) {
                 return intersectPolygon2Polygon(shape, this);
             }
         }
@@ -8395,7 +8395,7 @@
          * @param {Point} center - rotation center, default is (0,0)
          * @returns {Polygon} - new rotated polygon
          */
-        rotate(angle = 0, center = new Flatten$1.Point()) {
+        rotate(angle = 0, center = new Flatten.Point()) {
             let newPolygon = new Polygon();
             for (let face of this.faces) {
                 newPolygon.addFace(face.shapes.map(shape => shape.rotate(angle, center)));
@@ -8422,7 +8422,7 @@
          * @param {Matrix} matrix - affine transformation matrix
          * @returns {Polygon} - new polygon
          */
-        transform(matrix = new Flatten$1.Matrix()) {
+        transform(matrix = new Flatten.Matrix()) {
             let newPolygon = new Polygon();
             for (let face of this.faces) {
                 newPolygon.addFace(face.shapes.map(shape => shape.transform(matrix)));
@@ -8462,15 +8462,15 @@
         }
     }
 
-    Flatten$1.Polygon = Polygon;
+    Flatten.Polygon = Polygon;
 
     /**
      * Shortcut method to create new polygon
      */
-    const polygon = (...args) => new Flatten$1.Polygon(...args);
-    Flatten$1.polygon = polygon;
+    const polygon = (...args) => new Flatten.Polygon(...args);
+    Flatten.polygon = polygon;
 
-    const {Circle, Line, Point, Vector, Utils} = Flatten$1;
+    const {Circle, Line, Point, Vector, Utils} = Flatten;
     /**
      * Class Inversion represent operator of inversion in circle
      * Inversion is a transformation of the Euclidean plane that maps generalized circles
@@ -8547,15 +8547,15 @@
             }
         }
     }
-    Flatten$1.Inversion = Inversion;
+    Flatten.Inversion = Inversion;
 
     /**
      * Shortcut to create inversion operator
      * @param circle
      * @returns {Inversion}
      */
-    const inversion = (circle) => new Flatten$1.Inversion(circle);
-    Flatten$1.inversion = inversion;
+    const inversion = (circle) => new Flatten.Inversion(circle);
+    Flatten.inversion = inversion;
 
     class Distance {
         /**
@@ -8576,8 +8576,8 @@
          */
         static point2line(pt, line) {
             let closest_point = pt.projectionOn(line);
-            let vec = new Flatten$1.Vector(pt, closest_point);
-            return [vec.length, new Flatten$1.Segment(pt, closest_point)];
+            let vec = new Flatten.Vector(pt, closest_point);
+            return [vec.length, new Flatten.Segment(pt, closest_point)];
         }
 
         /**
@@ -8588,13 +8588,13 @@
          */
         static point2circle(pt, circle) {
             let [dist2center, shortest_dist] = pt.distanceTo(circle.center);
-            if (Flatten$1.Utils.EQ_0(dist2center)) {
-                return [circle.r, new Flatten$1.Segment(pt, circle.toArc().start)];
+            if (Flatten.Utils.EQ_0(dist2center)) {
+                return [circle.r, new Flatten.Segment(pt, circle.toArc().start)];
             } else {
                 let dist = Math.abs(dist2center - circle.r);
-                let v = new Flatten$1.Vector(circle.pc, pt).normalize().multiply(circle.r);
+                let v = new Flatten.Vector(circle.pc, pt).normalize().multiply(circle.r);
                 let closest_point = circle.pc.translate(v);
-                return [dist, new Flatten$1.Segment(pt, closest_point)];
+                return [dist, new Flatten.Segment(pt, closest_point)];
             }
         }
 
@@ -8610,9 +8610,9 @@
                 return Distance.point2point(pt, segment.start);
             }
 
-            let v_seg = new Flatten$1.Vector(segment.start, segment.end);
-            let v_ps2pt = new Flatten$1.Vector(segment.start, pt);
-            let v_pe2pt = new Flatten$1.Vector(segment.end, pt);
+            let v_seg = new Flatten.Vector(segment.start, segment.end);
+            let v_ps2pt = new Flatten.Vector(segment.start, pt);
+            let v_pe2pt = new Flatten.Vector(segment.end, pt);
             let start_sp = v_seg.dot(v_ps2pt);
             /* dot product v_seg * v_ps2pt */
             let end_sp = -v_seg.dot(v_pe2pt);
@@ -8620,13 +8620,13 @@
 
             let dist;
             let closest_point;
-            if (Flatten$1.Utils.GE(start_sp, 0) && Flatten$1.Utils.GE(end_sp, 0)) {    /* point inside segment scope */
+            if (Flatten.Utils.GE(start_sp, 0) && Flatten.Utils.GE(end_sp, 0)) {    /* point inside segment scope */
                 let v_unit = segment.tangentInStart(); // new Flatten.Vector(v_seg.x / this.length, v_seg.y / this.length);
                 /* unit vector ||v_unit|| = 1 */
                 dist = Math.abs(v_unit.cross(v_ps2pt));
                 /* dist = abs(v_unit x v_ps2pt) */
                 closest_point = segment.start.translate(v_unit.multiply(v_unit.dot(v_ps2pt)));
-                return [dist, new Flatten$1.Segment(pt, closest_point)];
+                return [dist, new Flatten.Segment(pt, closest_point)];
             } else if (start_sp < 0) {                             /* point is out of scope closer to ps */
                 return pt.distanceTo(segment.start);
             } else {                                               /* point is out of scope closer to pe */
@@ -8641,7 +8641,7 @@
          * @returns {Number | Segment} - distance and shortest segment
          */
         static point2arc(pt, arc) {
-            let circle = new Flatten$1.Circle(arc.pc, arc.r);
+            let circle = new Flatten.Circle(arc.pc, arc.r);
             let dist_and_segment = [];
             let dist, shortest_segment;
             [dist, shortest_segment] = Distance.point2circle(pt, circle);
@@ -8665,7 +8665,7 @@
         static segment2line(seg, line) {
             let ip = seg.intersect(line);
             if (ip.length > 0) {
-                return [0, new Flatten$1.Segment(ip[0], ip[0])];   // distance = 0, closest point is the first point
+                return [0, new Flatten.Segment(ip[0], ip[0])];   // distance = 0, closest point is the first point
             }
             let dist_and_segment = [];
             dist_and_segment.push(Distance.point2line(seg.start, line));
@@ -8685,7 +8685,7 @@
         static segment2segment(seg1, seg2) {
             let ip = intersectSegment2Segment(seg1, seg2);
             if (ip.length > 0) {
-                return [0, new Flatten$1.Segment(ip[0], ip[0])];   // distance = 0, closest point is the first point
+                return [0, new Flatten.Segment(ip[0], ip[0])];   // distance = 0, closest point is the first point
             }
 
             // Seg1 and seg2 not intersected
@@ -8712,7 +8712,7 @@
             /* Case 1 Segment and circle intersected. Return the first point and zero distance */
             let ip = seg.intersect(circle);
             if (ip.length > 0) {
-                return [0, new Flatten$1.Segment(ip[0], ip[0])];
+                return [0, new Flatten.Segment(ip[0], ip[0])];
             }
 
             // No intersection between segment and circle
@@ -8720,16 +8720,16 @@
             /* Case 2. Distance to projection of center point to line bigger than radius
              * And projection point belong to segment
               * Then measure again distance from projection to circle and return it */
-            let line = new Flatten$1.Line(seg.ps, seg.pe);
+            let line = new Flatten.Line(seg.ps, seg.pe);
             let [dist, shortest_segment] = Distance.point2line(circle.center, line);
-            if (Flatten$1.Utils.GE(dist, circle.r) && shortest_segment.end.on(seg)) {
+            if (Flatten.Utils.GE(dist, circle.r) && shortest_segment.end.on(seg)) {
                 return Distance.point2circle(shortest_segment.end, circle);
             }
             /* Case 3. Otherwise closest point is one of the end points of the segment */
             else {
                 let [dist_from_start, shortest_segment_from_start] = Distance.point2circle(seg.start, circle);
                 let [dist_from_end, shortest_segment_from_end] = Distance.point2circle(seg.end, circle);
-                return Flatten$1.Utils.LT(dist_from_start, dist_from_end) ?
+                return Flatten.Utils.LT(dist_from_start, dist_from_end) ?
                     [dist_from_start, shortest_segment_from_start] :
                     [dist_from_end, shortest_segment_from_end];
             }
@@ -8745,19 +8745,19 @@
             /* Case 1 Segment and arc intersected. Return the first point and zero distance */
             let ip = seg.intersect(arc);
             if (ip.length > 0) {
-                return [0, new Flatten$1.Segment(ip[0], ip[0])];
+                return [0, new Flatten.Segment(ip[0], ip[0])];
             }
 
             // No intersection between segment and arc
-            let line = new Flatten$1.Line(seg.ps, seg.pe);
-            let circle = new Flatten$1.Circle(arc.pc, arc.r);
+            let line = new Flatten.Line(seg.ps, seg.pe);
+            let circle = new Flatten.Circle(arc.pc, arc.r);
 
             /* Case 2. Distance to projection of center point to line bigger than radius AND
              * projection point belongs to segment AND
                * distance from projection point to circle belongs to arc  =>
                * return this distance from projection to circle */
             let [dist_from_center, shortest_segment_from_center] = Distance.point2line(circle.center, line);
-            if (Flatten$1.Utils.GE(dist_from_center, circle.r) && shortest_segment_from_center.end.on(seg)) {
+            if (Flatten.Utils.GE(dist_from_center, circle.r) && shortest_segment_from_center.end.on(seg)) {
                 let [dist_from_projection, shortest_segment_from_projection] =
                     Distance.point2circle(shortest_segment_from_center.end, circle);
                 if (shortest_segment_from_projection.end.on(arc)) {
@@ -8789,7 +8789,7 @@
         static circle2circle(circle1, circle2) {
             let ip = circle1.intersect(circle2);
             if (ip.length > 0) {
-                return [0, new Flatten$1.Segment(ip[0], ip[0])];
+                return [0, new Flatten.Segment(ip[0], ip[0])];
             }
 
             // Case 1. Concentric circles. Convert to arcs and take distance between two arc starts
@@ -8799,7 +8799,7 @@
                 return Distance.point2point(arc1.start, arc2.start);
             } else {
                 // Case 2. Not concentric circles
-                let line = new Flatten$1.Line(circle1.center, circle2.center);
+                let line = new Flatten.Line(circle1.center, circle2.center);
                 let ip1 = line.intersect(circle1);
                 let ip2 = line.intersect(circle2);
 
@@ -8824,7 +8824,7 @@
         static circle2line(circle, line) {
             let ip = circle.intersect(line);
             if (ip.length > 0) {
-                return [0, new Flatten$1.Segment(ip[0], ip[0])];
+                return [0, new Flatten.Segment(ip[0], ip[0])];
             }
 
             let [dist_from_center, shortest_segment_from_center] = Distance.point2line(circle.center, line);
@@ -8843,17 +8843,17 @@
             /* Case 1 Line and arc intersected. Return the first point and zero distance */
             let ip = line.intersect(arc);
             if (ip.length > 0) {
-                return [0, new Flatten$1.Segment(ip[0], ip[0])];
+                return [0, new Flatten.Segment(ip[0], ip[0])];
             }
 
-            let circle = new Flatten$1.Circle(arc.center, arc.r);
+            let circle = new Flatten.Circle(arc.center, arc.r);
 
             /* Case 2. Distance to projection of center point to line bigger than radius AND
              * projection point belongs to segment AND
                * distance from projection point to circle belongs to arc  =>
                * return this distance from projection to circle */
             let [dist_from_center, shortest_segment_from_center] = Distance.point2line(circle.center, line);
-            if (Flatten$1.Utils.GE(dist_from_center, circle.r)) {
+            if (Flatten.Utils.GE(dist_from_center, circle.r)) {
                 let [dist_from_projection, shortest_segment_from_projection] =
                     Distance.point2circle(shortest_segment_from_center.end, circle);
                 if (shortest_segment_from_projection.end.on(arc)) {
@@ -8878,10 +8878,10 @@
         static arc2circle(arc, circle2) {
             let ip = arc.intersect(circle2);
             if (ip.length > 0) {
-                return [0, new Flatten$1.Segment(ip[0], ip[0])];
+                return [0, new Flatten.Segment(ip[0], ip[0])];
             }
 
-            let circle1 = new Flatten$1.Circle(arc.center, arc.r);
+            let circle1 = new Flatten.Circle(arc.center, arc.r);
 
             let [dist, shortest_segment] = Distance.circle2circle(circle1, circle2);
             if (shortest_segment.start.on(arc)) {
@@ -8907,11 +8907,11 @@
         static arc2arc(arc1, arc2) {
             let ip = arc1.intersect(arc2);
             if (ip.length > 0) {
-                return [0, new Flatten$1.Segment(ip[0], ip[0])];
+                return [0, new Flatten.Segment(ip[0], ip[0])];
             }
 
-            let circle1 = new Flatten$1.Circle(arc1.center, arc1.r);
-            let circle2 = new Flatten$1.Circle(arc2.center, arc2.r);
+            let circle1 = new Flatten.Circle(arc1.center, arc1.r);
+            let circle2 = new Flatten.Circle(arc2.center, arc2.r);
 
             let [dist, shortest_segment] = Distance.circle2circle(circle1, circle2);
             if (shortest_segment.start.on(arc1) && shortest_segment.end.on(arc2)) {
@@ -8966,11 +8966,11 @@
          * @returns {Number | Segment} - distance and shortest segment
          */
         static point2polygon(point, polygon) {
-            let min_dist_and_segment = [Number.POSITIVE_INFINITY, new Flatten$1.Segment()];
+            let min_dist_and_segment = [Number.POSITIVE_INFINITY, new Flatten.Segment()];
             for (let edge of polygon.edges) {
-                let [dist, shortest_segment] = (edge.shape instanceof Flatten$1.Segment) ?
+                let [dist, shortest_segment] = (edge.shape instanceof Flatten.Segment) ?
                     Distance.point2segment(point, edge.shape) : Distance.point2arc(point, edge.shape);
-                if (Flatten$1.Utils.LT(dist, min_dist_and_segment[0])) {
+                if (Flatten.Utils.LT(dist, min_dist_and_segment[0])) {
                     min_dist_and_segment = [dist, shortest_segment];
                 }
             }
@@ -8978,10 +8978,10 @@
         }
 
         static shape2polygon(shape, polygon) {
-            let min_dist_and_segment = [Number.POSITIVE_INFINITY, new Flatten$1.Segment()];
+            let min_dist_and_segment = [Number.POSITIVE_INFINITY, new Flatten.Segment()];
             for (let edge of polygon.edges) {
                 let [dist, shortest_segment] = shape.distanceTo(edge.shape);
-                if (Flatten$1.Utils.LT(dist, min_dist_and_segment[0])) {
+                if (Flatten.Utils.LT(dist, min_dist_and_segment[0])) {
                     min_dist_and_segment = [dist, shortest_segment];
                 }
             }
@@ -8995,11 +8995,11 @@
          * @returns {Number | Segment} - distance and shortest segment
          */
         static polygon2polygon(polygon1, polygon2) {
-            let min_dist_and_segment = [Number.POSITIVE_INFINITY, new Flatten$1.Segment()];
+            let min_dist_and_segment = [Number.POSITIVE_INFINITY, new Flatten.Segment()];
             for (let edge1 of polygon1.edges) {
                 for (let edge2 of polygon2.edges) {
                     let [dist, shortest_segment] = edge1.shape.distanceTo(edge2.shape);
-                    if (Flatten$1.Utils.LT(dist, min_dist_and_segment[0])) {
+                    if (Flatten.Utils.LT(dist, min_dist_and_segment[0])) {
                         min_dist_and_segment = [dist, shortest_segment];
                     }
                 }
@@ -9047,12 +9047,12 @@
 
                 // Estimate min-max dist to the shape stored in the node.item, using node.item.key which is shape's box
                 [mindist, maxdist] = Distance.box2box_minmax(shape.box, node.item.key);
-                if (node.item.value instanceof Flatten$1.Edge) {
+                if (node.item.value instanceof Flatten.Edge) {
                     tree.insert([mindist, maxdist], node.item.value.shape);
                 } else {
                     tree.insert([mindist, maxdist], node.item.value);
                 }
-                if (Flatten$1.Utils.LT(maxdist, min_stop)) {
+                if (Flatten.Utils.LT(maxdist, min_stop)) {
                     min_stop = maxdist;                       // this will be the new distance estimation
                 }
             }
@@ -9067,7 +9067,7 @@
             let new_level = [...new_level_left, ...new_level_right].filter(node => {
                 // Node subtree quick reject, node.max is a subtree box
                 let [mindist, maxdist] = Distance.box2box_minmax(shape.box, node.max);
-                return (Flatten$1.Utils.LE(mindist, min_stop));
+                return (Flatten.Utils.LE(mindist, min_stop));
             });
 
             min_stop = Distance.minmax_tree_process_level(shape, new_level, min_stop, tree);
@@ -9097,13 +9097,13 @@
                     return [min_dist_and_segment_new, stop];
                 }
 
-                if (Flatten$1.Utils.LT(min_dist_and_segment_new[0], Math.sqrt(node.item.key.low))) {
+                if (Flatten.Utils.LT(min_dist_and_segment_new[0], Math.sqrt(node.item.key.low))) {
                     return [min_dist_and_segment_new, true];   // stop condition
                 }
 
                 let [dist, shortest_segment] = Distance.distance(shape, node.item.value);
                 // console.log(dist)
-                if (Flatten$1.Utils.LT(dist, min_dist_and_segment_new[0])) {
+                if (Flatten.Utils.LT(dist, min_dist_and_segment_new[0])) {
                     min_dist_and_segment_new = [dist, shortest_segment];
                 }
 
@@ -9123,9 +9123,9 @@
          * @returns {*}
          */
         static shape2planarSet(shape, set, min_stop = Number.POSITIVE_INFINITY) {
-            let min_dist_and_segment = [min_stop, new Flatten$1.Segment()];
+            let min_dist_and_segment = [min_stop, new Flatten.Segment()];
             let stop = false;
-            if (set instanceof Flatten$1.PlanarSet) {
+            if (set instanceof Flatten.PlanarSet) {
                 let tree = Distance.minmax_tree(shape, set, min_stop);
                 [min_dist_and_segment, stop] = Distance.minmax_tree_calc_distance(shape, tree.root, min_dist_and_segment);
             }
@@ -9134,10 +9134,10 @@
 
         static sort(dist_and_segment) {
             dist_and_segment.sort((d1, d2) => {
-                if (Flatten$1.Utils.LT(d1[0], d2[0])) {
+                if (Flatten.Utils.LT(d1[0], d2[0])) {
                     return -1;
                 }
-                if (Flatten$1.Utils.GT(d1[0], d2[0])) {
+                if (Flatten.Utils.GT(d1[0], d2[0])) {
                     return 1;
                 }
                 return 0;
@@ -9149,12 +9149,10 @@
         }
     }
 
-    Flatten$1.Distance = Distance;
+    Flatten.Distance = Distance;
 
     Flatten.BooleanOperations = BooleanOperations;
     Flatten.Relations = Relations;
-
-    // export default graph2d;
 
     exports.Arc = Arc;
     exports.BOUNDARY = BOUNDARY$1;
@@ -9189,6 +9187,7 @@
     exports.arc = arc;
     exports.box = box;
     exports.circle = circle;
+    exports.default = Flatten;
     exports.inversion = inversion;
     exports.line = line;
     exports.matrix = matrix;
@@ -9199,5 +9198,7 @@
     exports.ray_shoot = ray_shoot;
     exports.segment = segment;
     exports.vector = vector$1;
+
+    Object.defineProperty(exports, '__esModule', { value: true });
 
 }));
