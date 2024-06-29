@@ -1,6 +1,6 @@
 {
   "name": "@zenghawtin/graph2d",
-  "version": "1.1.10",
+  "version": "1.1.11",
   "description": "Javascript library for 2d geometry",
   "main": "dist/main.cjs",
   "umd:main": "dist/main.umd.js",
